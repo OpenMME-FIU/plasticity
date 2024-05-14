@@ -40,13 +40,13 @@ FILE(GLOB crystalOrientationsIO src/utilityObjects/*.cc)
 
 PROJECT(prisms_cp)
 SET(CMAKE_BUILD_TYPE Release)
-
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 # Append extra flags for the GNU compiler to suppress some warnings
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         #set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-unused-parameter -Wno-extra")
         #set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-unused-parameter -Wno-extra")
-        set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
-        set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
+        set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -DBOOST_ALLOW_DEPRECATED_HEADERS")
+        set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -DBOOST_ALLOW_DEPRECATED_HEADERS")
         #set(CMAKE_CXX_FLAGS "-Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
 endif()
 
@@ -60,10 +60,11 @@ SET(CMAKE_BUILD_TYPE Debug)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         #set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-unused-parameter -Wno-extra")
         #set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-unused-parameter -Wno-extra")
-        set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
-        set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
+        set(DEAL_II_CXX_FLAGS_DEBUG "${DEAL_II_CXX_FLAGS_DEBUG} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -DBOOST_ALLOW_DEPRECATED_HEADERS")
+        set(DEAL_II_CXX_FLAGS_RELEASE "${DEAL_II_CXX_FLAGS_RELEASE} -Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -DBOOST_ALLOW_DEPRECATED_HEADERS")
         #set(CMAKE_CXX_FLAGS "-Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
 endif()
 
-ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO})
+ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO}
+        ref_fem_fortran_emulation/fem.hpp)
 DEAL_II_SETUP_TARGET(${PROJECT_NAME})
