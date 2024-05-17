@@ -50,7 +50,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         #set(CMAKE_CXX_FLAGS "-Wno-maybe-uninitialized -Wno-deprecated-declarations -Wno-comment -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable")
 endif()
 
-ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO})
+ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO}
+        include/cp_fcc.h)
 DEAL_II_SETUP_TARGET(${PROJECT_NAME})
 
 PROJECT(prisms_cp_debug)
@@ -66,5 +67,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO}
-        ref_fem_fortran_emulation/fem.hpp)
+        ref_fem_fortran_emulation/fem.hpp
+        include/cp_fcc.h)
 DEAL_II_SETUP_TARGET(${PROJECT_NAME})

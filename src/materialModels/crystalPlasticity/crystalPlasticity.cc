@@ -3,6 +3,7 @@
 template <int dim>
 crystalPlasticity<dim>::crystalPlasticity(userInputParameters & _userInputs):
 ellipticBVP<dim>(_userInputs),
+E(dim,dim), //For umat
 F(dim,dim),
 F_tau(dim,dim),
 FP_tau(dim,dim),
