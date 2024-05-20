@@ -104,9 +104,9 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     unsigned int  numberOfCuts;
     FullMatrix<double> Delta_F,div_Delta_F;
       pcout << "calculatePlasticity\n";
-      arr_ref<fem::real_star_8> stress(2*dim); //Voight notation
+      arr_ref<fem::real_star_8, 1> stress; //Voight notation
       arr_ref<fem::real_star_8> statev; //
-      arr_ref<fem::real_star_8, 2> ddsdde(2*dim,2*dim);
+      arr_ref<fem::real_star_8, 2> ddsdde;
       fem::real_star_8& sse;
       fem::real_star_8 const& /* spd */;
       fem::real_star_8 const& /* scd */;
@@ -123,15 +123,15 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       arr_cref<fem::real_star_8> /* predef */;
       arr_cref<fem::real_star_8> /* dpred */;
       str_cref /* cmname */;
-      int const& ndi;
-      int const& nshr;
-      int const& ntens;
-      int const& nstatv;
+      int ndi;
+      int nshr;
+      int ntens;
+      int nstatv;
       arr_cref<fem::real_star_8> props;
-      int const& nprops;
+      int nprops;
       arr_cref<fem::real_star_8> /* coords */;
       arr_cref<fem::real_star_8, 2> /* drot */;
-      fem::real_star_8& pnewdt;
+      fem::real_star_8 pnewdt;
       fem::real_star_8 const& /* celent */;
       arr_cref<fem::real_star_8, 2> dfgrd0;
       arr_cref<fem::real_star_8, 2> dfgrd1;
@@ -147,13 +147,13 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       ntens = ndi + nshr;
       nstatev = this->userInputs.numberofUserMatStateVar1;
       nprops = this->userInputs.numberofUserMatConstants1;
-      stress(dimension(ntens));
-      statev(dimension(nstatv));
-      ddsdde(dimension(ntens, ntens));
-      time(dimension(2));
-      props(dimension(nprops));
-      dfgrd0(dimension(dim, dim));
-      dfgrd1(dimension(dim, dim));
+      stress(fem::dimension(ntens));
+      statev(fem::dimension(nstatv));
+      ddsdde(fem::dimension(ntens, ntens));
+      time(fem::dimension(2));
+      props(fem::dimension(nprops));
+      dfgrd0(fem::dimension(dim, dim));
+      dfgrd1(fem::dimension(dim, dim));
       for(unsigned int i=0; i<nstatv;i++){
           statev[i] = stateVar_conv[cellID][quadPtID][i];
       }
@@ -174,7 +174,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                   stress[6-i-j] = T[i][j];
           }
       }
-      dfgrd1(dimension(dim, dim));
+      dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
                  0,0,0,0,0,time,dtime,0,0,0,0,"",
