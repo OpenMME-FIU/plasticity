@@ -1,4 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
+#include "../../../include/crystalPlasticity.h"
 
 namespace cp_fcc {
 
@@ -250,14 +251,18 @@ inverse3(
     3) * b(3, 1);
   //C
   arr_2d<3, 3, fem::real_star_8> unit(fem::fill0);
-  unit = 0.0f;
+  //unit = 0.0f;
   int i = fem::int0;
   FEM_DO_SAFE(i, 1, 3) {
-    unit(i, i) = 1.0f;
+    unit(i, i) = 2.0f;
   }
-  b = b / det;
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
-  b = matmult(b, (2.0f * unit - matmult(a, b)));
+    FEM_DO_SAFE(i, 1, 3)
+    {
+        FEM_DO_SAFE(j, 1, 3) {
+            b(i, j) = b(i,j)/det;
+        }
+    }
+  b = matmult(b, (unit - matmult(a, b)));
   //C
 }
 
@@ -3497,7 +3502,7 @@ plasticgradientinv1(
   //C
 }
 
-fem::real_star_8
+arr_cref<fem::real_star_8, 2>
 matmult(
   arr_cref<fem::real_star_8, 2> a,
   arr_cref<fem::real_star_8, 2> b)

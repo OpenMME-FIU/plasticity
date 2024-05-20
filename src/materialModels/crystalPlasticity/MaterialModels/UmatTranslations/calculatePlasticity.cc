@@ -103,7 +103,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     double Criteria_Delta_F,inverseNumberOfCuts,Criteria_Delta_F_2;
     unsigned int  numberOfCuts;
     FullMatrix<double> Delta_F,div_Delta_F;
-
+      pcout << "calculatePlasticity\n";
       arr_ref<fem::real_star_8> stress(2*dim); //Voight notation
       arr_ref<fem::real_star_8> statev; //
       arr_ref<fem::real_star_8, 2> ddsdde(2*dim,2*dim);
@@ -141,11 +141,12 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       int const& /* kspt */;
       int const& kstep;
       int const& /* kinc */;
+      pcout << "calculatePlasticity2\n";
       ndi = dim;
       nshr = (dim*dim - dim)/2;
       ntens = ndi + nshr;
-      nstatev = this->userInputs.numberofUserMatStateVar1
-      nprops = this->userInputs.numberofUserMatConstants1
+      nstatev = this->userInputs.numberofUserMatStateVar1;
+      nprops = this->userInputs.numberofUserMatConstants1;
       stress(dimension(ntens));
       statev(dimension(nstatv));
       ddsdde(dimension(ntens, ntens));
@@ -154,15 +155,15 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       dfgrd0(dimension(dim, dim));
       dfgrd1(dimension(dim, dim));
       for(unsigned int i=0; i<nstatv;i++){
-          statev[i] = stateVar_conv[cellID][quadPtID][i]
+          statev[i] = stateVar_conv[cellID][quadPtID][i];
       }
       for(unsigned int i=0; i<nprops;i++){
-          props[i] = UserMatConstants[i]
+          props[i] = UserMatConstants[i];
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               dfgrd0[i][j]=F[i][j];
-              sse += F[i][j]*P[i][j]/2 //missing divide by element volume???
+              sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
       for(unsigned int i=0 ; i<dim ; i++){
@@ -179,7 +180,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                  0,0,0,0,0,time,dtime,0,0,0,0,"",
                  ndi,nshr,ntens,nstatv,props,nprops,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
-                 0,0,0,0,kstep,0)
+                 0,0,0,0,kstep,0);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               F_tau[i][j]=dfgrd1[i][j];
