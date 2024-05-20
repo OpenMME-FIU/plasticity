@@ -7,6 +7,28 @@ using namespace fem::major_types;
 
 using fem::common;
 
+arr_ref<fem::real_star_8, 2>
+matmult(
+        arr_cref<fem::real_star_8, 2> a,
+        arr_cref<fem::real_star_8, 2> b)
+{
+    fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
+    a(dimension(3, 3));
+    b(dimension(3, 3));
+    int i = fem::int0;
+    int j = fem::int0;
+    int k = fem::int0;
+    FEM_DO_SAFE(i, 1, 3) {
+        FEM_DO_SAFE(j, 1, 3) {
+            return_value(i, j) = 0.e0;
+            FEM_DO_SAFE(k, 1, 3) {
+                return_value(i, j) += a(i, k) * b(k, j);
+            }
+        }
+    }
+    return return_value;
+}
+
 void
 slip1(
   arr_ref<fem::real_star_8, 2> slpdir1,
@@ -3503,29 +3525,9 @@ plasticgradientinv1(
   //C
 }
 
-arr_cref<fem::real_star_8, 2>
-matmult(
-  arr_cref<fem::real_star_8, 2> a,
-  arr_cref<fem::real_star_8, 2> b)
-{
-  fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
-  a(dimension(3, 3));
-  b(dimension(3, 3));
-  int i = fem::int0;
-  int j = fem::int0;
-  int k = fem::int0;
-  FEM_DO_SAFE(i, 1, 3) {
-    FEM_DO_SAFE(j, 1, 3) {
-      return_value(i, j) = 0.e0;
-      FEM_DO_SAFE(k, 1, 3) {
-        return_value(i, j) += a(i, k) * b(k, j);
-      }
-    }
-  }
-  return return_value;
-}
+
 
 } // namespace cp_fcc
 
-g++ -o "fable_cout" -Wall -Wno-sign-compare -Winvalid-pch -Wno-deprecated-declarations -g -O0 -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project/fable" -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project" "fable_cout.cpp"
-g++ -o "fable_cout" -Wall -Wno-sign-compare -Winvalid-pch -Wno-deprecated-declarations -g -O0 -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project/fable" -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project" "fable_cout.cpp"
+//g++ -o "fable_cout" -Wall -Wno-sign-compare -Winvalid-pch -Wno-deprecated-declarations -g -O0 -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project/fable" -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project" "fable_cout.cpp"
+//g++ -o "fable_cout" -Wall -Wno-sign-compare -Winvalid-pch -Wno-deprecated-declarations -g -O0 -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project/fable" -I"/home/atallman/PycharmProjects/fable/modules/cctbx_project" "fable_cout.cpp"
