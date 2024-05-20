@@ -253,13 +253,14 @@ inverse3(
   arr_2d<3, 3, fem::real_star_8> unit(fem::fill0);
   //unit = 0.0f;
   int i = fem::int0;
+  int k = fem::int0;
   FEM_DO_SAFE(i, 1, 3) {
     unit(i, i) = 2.0f;
   }
     FEM_DO_SAFE(i, 1, 3)
     {
-        FEM_DO_SAFE(j, 1, 3) {
-            b(i, j) = b(i,j)/det;
+        FEM_DO_SAFE(k, 1, 3) {
+            b(i, k) = b(i,k)/det;
         }
     }
   b = matmult(b, (unit - matmult(a, b)));
