@@ -1571,7 +1571,7 @@ cellsize(
   arr_1d<12, fem::real_star_8> taumax(fem::fill0);
   arr_1d<12, fem::real_star_8> taumin(fem::fill0);
   FEM_DO_SAFE(i, 1, 12) {
-    if (kstep < 3.0f && fem::time(2) < 1.98f) {
+    if (kstep < 3.0f && time(2) < 1.98f) {
       if (fem::abs(tau(i)) > fem::abs(ptau(i)) && kstep == 1.0f) {
         if (fem::sign(1.e0, tau(i) * ptau(i)) >= 0.0f) {
           taurange(i) = fem::abs(tau(i));
@@ -3137,7 +3137,7 @@ umat(
   //C      END IF
   //C
   //C: INITIAL CONDITION
-  if (fem::time(2) == 0.0f) {
+  if (time(2) == 0.0f) {
     initial(b0, ro0, tau0, statev, fpinv0, cts);
   }
   else {
@@ -3172,11 +3172,11 @@ umat(
   //C: STRUCTURE
   if (cts(44) == 1.0f) {
     structmon(statev, etha, fw, cts);
-    cellsizemon(d, tau, cts, statev, kstep, fem::time);
+    cellsizemon(d, tau, cts, statev, kstep, time);
   }
   else {
     structcyc(statev, etha, fw, cts, kstep, props);
-    cellsize(d, tau, cts, statev, kstep, fem::time, props);
+    cellsize(d, tau, cts, statev, kstep, time, props);
   }
   //C
   //C: GAMA-DOT0   RO*L*B*Vg
