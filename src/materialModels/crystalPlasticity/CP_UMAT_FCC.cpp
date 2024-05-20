@@ -1,4 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
+#include "../../../include/crystalPlasticity.h"
 
 namespace cp_fcc {
 
@@ -250,14 +251,18 @@ inverse3(
     3) * b(3, 1);
   //C
   arr_2d<3, 3, fem::real_star_8> unit(fem::fill0);
-  unit = 0.0f;
+  //unit = 0.0f;
   int i = fem::int0;
   FEM_DO_SAFE(i, 1, 3) {
-    unit(i, i) = 1.0f;
+    unit(i, i) = 2.0f;
   }
-  b = b / det;
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
-  b = matmult(b, (2.0f * unit - matmult(a, b)));
+    FEM_DO_SAFE(i, 1, 3)
+    {
+        FEM_DO_SAFE(j, 1, 3) {
+            b(i, j) = b(i,j)/det;
+        }
+    }
+  b = matmult(b, (unit - matmult(a, b)));
   //C
 }
 
@@ -1566,7 +1571,7 @@ cellsize(
   arr_1d<12, fem::real_star_8> taumax(fem::fill0);
   arr_1d<12, fem::real_star_8> taumin(fem::fill0);
   FEM_DO_SAFE(i, 1, 12) {
-    if (kstep < 3.0f && fem::time(2) < 1.98f) {
+    if (kstep < 3.0f && time(2) < 1.98f) {
       if (fem::abs(tau(i)) > fem::abs(ptau(i)) && kstep == 1.0f) {
         if (fem::sign(1.e0, tau(i) * ptau(i)) >= 0.0f) {
           taurange(i) = fem::abs(tau(i));
@@ -3132,7 +3137,7 @@ umat(
   //C      END IF
   //C
   //C: INITIAL CONDITION
-  if (fem::time(2) == 0.0f) {
+  if (time(2) == 0.0f) {
     initial(b0, ro0, tau0, statev, fpinv0, cts);
   }
   else {
@@ -3167,11 +3172,11 @@ umat(
   //C: STRUCTURE
   if (cts(44) == 1.0f) {
     structmon(statev, etha, fw, cts);
-    cellsizemon(d, tau, cts, statev, kstep, fem::time);
+    cellsizemon(d, tau, cts, statev, kstep, time);
   }
   else {
     structcyc(statev, etha, fw, cts, kstep, props);
-    cellsize(d, tau, cts, statev, kstep, fem::time, props);
+    cellsize(d, tau, cts, statev, kstep, time, props);
   }
   //C
   //C: GAMA-DOT0   RO*L*B*Vg
@@ -3497,7 +3502,7 @@ plasticgradientinv1(
   //C
 }
 
-fem::real_star_8
+arr_cref<fem::real_star_8, 2>
 matmult(
   arr_cref<fem::real_star_8, 2> a,
   arr_cref<fem::real_star_8, 2> b)
