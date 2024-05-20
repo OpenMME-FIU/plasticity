@@ -67,6 +67,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 ADD_LIBRARY(${PROJECT_NAME} ${userInputParameters} ${EBVPfunctions} ${CP_masterclass} ${Continuum_masterclass} ${crystalOrientationsIO}
-        ref_fem_fortran_emulation/fem.hpp
+        include/fem.hpp
         include/cp_fcc.h)
 DEAL_II_SETUP_TARGET(${PROJECT_NAME})
