@@ -1,5 +1,6 @@
 #include "../../../include/crystalPlasticity.h"
 #include "userFunctions.cc"
+#include "CP_UMAT_FCC.cpp"
 //////////////////////////////////////////////////////////////////////////
 //////calculatePlasticity.cc numerically integrates the constitive model.
 //////This calculatePlasticity.cc is based on the following rate-dependent crystal plasticity model:
@@ -27,8 +28,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 
     multiphaseInit(cellID,quadPtID);
 
+
+
     /////////////////////////////////////////////////////////
     FullMatrix<double> FE_t(dim,dim),FP_t(dim,dim),F_t(dim,dim);  //Elastic, Plastic, and total deformation gradient
+    FullMatrix<double> E_t(dim,dim) // Green Strain for UMAT
     Vector<double> s_alpha_t(n_Tslip_systems),slipfraction_t(n_slip_systems),twinfraction_t(n_twin_systems); // Slip resistance
     Vector<double> W_kh_t(n_Tslip_systems),W_kh_t1(n_Tslip_systems),W_kh_t2(n_Tslip_systems),signed_slip_t(n_Tslip_systems) ;
     Vector<double> rot1(dim);// Crystal orientation (Rodrigues representation)
@@ -100,8 +104,78 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     unsigned int  numberOfCuts;
     FullMatrix<double> Delta_F,div_Delta_F;
 
-
+      arr_ref<fem::real_star_8> stress(2*dim); //Voight notation
+      arr_ref<fem::real_star_8> statev; //
+      arr_ref<fem::real_star_8, 2> ddsdde(2*dim,2*dim);
+      fem::real_star_8& sse;
+      fem::real_star_8 const& /* spd */;
+      fem::real_star_8 const& /* scd */;
+      fem::real_star_8 const& /* rpl */;
+      arr_cref<fem::real_star_8> /* ddsddt */;
+      arr_cref<fem::real_star_8> /* drplde */;
+      fem::real_star_8 const& /* drpldt */;
+      arr_cref<fem::real_star_8> /* stran */;
+      arr_cref<fem::real_star_8> /* dstran */;
+      arr_cref<fem::real_star_8> time;
+      fem::real_star_8 const& dtime;
+      fem::real_star_8 const& /* temp */;
+      fem::real_star_8 const& /* dtemp */;
+      arr_cref<fem::real_star_8> /* predef */;
+      arr_cref<fem::real_star_8> /* dpred */;
+      str_cref /* cmname */;
+      int const& ndi;
+      int const& nshr;
+      int const& ntens;
+      int const& nstatv;
+      arr_cref<fem::real_star_8> props;
+      int const& nprops;
+      arr_cref<fem::real_star_8> /* coords */;
+      arr_cref<fem::real_star_8, 2> /* drot */;
+      fem::real_star_8& pnewdt;
+      fem::real_star_8 const& /* celent */;
+      arr_cref<fem::real_star_8, 2> dfgrd0;
+      arr_cref<fem::real_star_8, 2> dfgrd1;
+      int const& /* noel */;
+      int const& /* npt */;
+      fem::real_star_8 const& /* layer */;
+      int const& /* kspt */;
+      int const& kstep;
+      int const& /* kinc */;
+      ndi = dim;
+      nshr = (dim*dim - dim)/2;
+      ntens = ndi + nshr;
+      nstatev = this->userInputs.numberofUserMatStateVar1
+      nprops = this->userInputs.numberofUserMatConstants1
+      stress(dimension(ntens));
+      statev(dimension(nstatv));
+      ddsdde(dimension(ntens, ntens));
+      time(dimension(2));
+      props(dimension(nprops));
+      dfgrd0(dimension(dim, dim));
+      dfgrd1(dimension(dim, dim));
+      for(unsigned int i=0; i<nstatv;i++){
+          statev[i] = stateVar_conv[cellID][quadPtID][i]
+      }
+      for(unsigned int i=0; i<nprops;i++){
+          props[i] = UserMatConstants[i]
+      }
+      for(unsigned int i=0 ; i<dim ; i++){
+          for(unsigned int j=0 ; j<dim ; j++){
+              dfgrd0[i][j]=F[i][j];
+          }
+      }
+      dfgrd1(dimension(dim, dim));
     //////////////////////////////////////////////////////////
+    cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
+                 0,0,0,0,0,time,dtime,0,0,0,0,"",
+                 ndi,nshr,ntens,nstatv,props,nprops,
+                 0,0,pnewdt,0, dfgrd0,dfgrd1,
+                 0,0,0,0,kstep,0)
+      for(unsigned int i=0 ; i<dim ; i++){
+          for(unsigned int j=0 ; j<dim ; j++){
+              F[i][j]=dfgrd1[i][j];
+          }
+      }
 
 
     std::cout.precision(16);
