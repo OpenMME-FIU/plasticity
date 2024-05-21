@@ -3517,7 +3517,7 @@ approximate_exp(
             a_copy2(ii, jj) = a_copy(ii, jj);
         }
     }
-}
+
 //  a_copy2 = a_copy;
   //C
   int loopvar = fem::int0;
