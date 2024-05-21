@@ -106,13 +106,13 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       this->pcout << "calculatePlasticity\n";
 
       fem::real_star_8 sse;
-      fem::real_star_8 const spd; //
-      fem::real_star_8 const scd;//
-      fem::real_star_8 const rpl;//
+      fem::real_star_8 const spd = 0.0f; //
+      fem::real_star_8 const scd = 0.0f;//
+      fem::real_star_8 const rpl= 0.0f;//
 
-      fem::real_star_8 const& dtime;
-      fem::real_star_8 const& temp11;//
-      fem::real_star_8 const& dtemp;//
+      fem::real_star_8 const dtime= 0.0f;
+      fem::real_star_8 const temp11= 0.0f;//
+      fem::real_star_8 const dtemp= 0.0f;//
       fem::arr_cref<fem::real_star_8> predef;//
       fem::arr_cref<fem::real_star_8> dpred;//
       fem::str_cref cmname;//
@@ -125,19 +125,19 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_cref<fem::real_star_8> coords ;//
       fem::arr_cref<fem::real_star_8, 2> drot ;//
       fem::real_star_8 pnewdt;
-      fem::real_star_8 const& celent;//
+      fem::real_star_8 const celent = 0.0f;//
       fem::arr_1d<ntens, fem::real_star_8> ddsddt;//
       fem::arr_1d<ntens, fem::real_star_8> drplde;//
-      fem::real_star_8 const drpldt ;//
+      fem::real_star_8 const drpldt = 0.0f;//
       fem::arr_1d<ntens, fem::real_star_8> stran ;//
       fem::arr_1d<ntens, fem::real_star_8> dstran;//
       fem::arr_1d<2, fem::real_star_8> time;
-      int const& noel;//
-      int const& npt;//
-      fem::real_star_8 const& layer;//
-      int const& kspt;//
-      int const& kstep;
-      int const& kinc;//
+      int const noel = 0;//
+      int const npt = 0;//
+      fem::real_star_8 const layer = 0.0f;//
+      int const kspt = 0;//
+      int const kstep = 0;
+      int const kinc = 0;//
       this->pcout << "calculatePlasticity2\n";
       fem::arr_1d<nprops, fem::real_star_8> props;
       fem::arr_1d<nstatv, fem::real_star_8> statev;
