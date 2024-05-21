@@ -105,16 +105,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     FullMatrix<double> Delta_F,div_Delta_F;
       this->pcout << "calculatePlasticity\n";
 
-      fem::real_star_8& sse;
-      fem::real_star_8 const& spd; //
-      fem::real_star_8 const& scd;//
-      fem::real_star_8 const& rpl;//
-      fem::arr_cref<fem::real_star_8> ddsddt;//
-      fem::arr_cref<fem::real_star_8> drplde;//
-      fem::real_star_8 const& drpldt ;//
-      fem::arr_cref<fem::real_star_8> stran ;//
-      fem::arr_cref<fem::real_star_8> dstran;//
-      fem::arr_cref<fem::real_star_8> time;
+      fem::real_star_8 sse;
+      fem::real_star_8 const spd; //
+      fem::real_star_8 const scd;//
+      fem::real_star_8 const rpl;//
+
       fem::real_star_8 const& dtime;
       fem::real_star_8 const& temp11;//
       fem::real_star_8 const& dtemp;//
@@ -131,7 +126,12 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_cref<fem::real_star_8, 2> drot ;//
       fem::real_star_8 pnewdt;
       fem::real_star_8 const& celent;//
-
+      fem::arr_1d<ntens, fem::real_star_8> ddsddt;//
+      fem::arr_1d<ntens, fem::real_star_8> drplde;//
+      fem::real_star_8 const drpldt ;//
+      fem::arr_1d<ntens, fem::real_star_8> stran ;//
+      fem::arr_1d<ntens, fem::real_star_8> dstran;//
+      fem::arr_1d<2, fem::real_star_8> time;
       int const& noel;//
       int const& npt;//
       fem::real_star_8 const& layer;//
@@ -145,7 +145,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_2d<ntens, ntens, fem::real_star_8> ddsdde;
       fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
       fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
-      time(fem::dimension(2));
+//      time(fem::dimension(2));
       for(unsigned int i=0; i<nstatv;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
       }
@@ -161,7 +161,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
-                  stress(i+1) = T[i][j];
+                  stress(i+1) = T[i][j]; //add stran and E here?
               else
                   stress(7-i-j) = T[i][j];
           }
