@@ -1598,6 +1598,7 @@ cellsize(
   props(dimension(5));
   //C
   int i = fem::int0;
+  fem::real_star_8 z=fem::zero<fem::real_star_8>();
   arr_1d<12, fem::real_star_8> ptau(fem::fill0);
   FEM_DO_SAFE(i, 1, 12) {
     ptau(i) = statev(i + 280);
@@ -1612,12 +1613,12 @@ cellsize(
         if (fem::sign(1.e0, tau(i) * ptau(i)) >= 0.0f) {
           taurange(i) = fem::abs(tau(i));
           statev(280 + i) = tau(i);
-          taumax(i) = fem::max(0.0f, tau(i));
-          taumin(i) = fem::min(0.0f, tau(i));
+          taumax(i) = fem::max(z, tau(i));
+          taumin(i) = fem::min(z, tau(i));
         }
         else {
-          taumax(i) = fem::max(0.0f, tau(i));
-          taumin(i) = fem::min(0.0f, tau(i));
+          taumax(i) = fem::max(z, tau(i));
+          taumin(i) = fem::min(z, tau(i));
           taurange(i) = fem::abs(taumax(i)) + fem::abs(taumin(i));
           statev(280 + i) = tau(i);
         }
@@ -1633,8 +1634,8 @@ cellsize(
         else {
           taurange(i) = fem::abs(ptau(i));
           statev(280 + i) = ptau(i);
-          taumax(i) = fem::max(0.0f, ptau(i));
-          taumin(i) = fem::min(0.0f, ptau(i));
+          taumax(i) = fem::max(z, ptau(i));
+          taumin(i) = fem::min(z, ptau(i));
         }
       }
       statev(304 + i) = taumax(i);
@@ -2017,8 +2018,8 @@ njacobian(
     FEM_DO_SAFE(i, 1, 12) {
       gdotgt += fem::pow(ddg(i), 2.0f);
     }
-    a2 = 0.0f;
-    a3 = 0.0f;
+//    a2 = 0.0f;
+//    a3 = 0.0f;
     FEM_DO_SAFE(i, 1, 12) {
       a1(i) = 0.0f;
       FEM_DO_SAFE(k, 1, 12) {
@@ -3410,8 +3411,13 @@ pade_coefficient(
 {
   fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
   arr_1d<7, fem::real_star_8> pt_table(fem::fill0);
-  pt_table = ( / 1.0e0, 1.0e0 / 2.0e0, 5.0e0 / 44.0e0, 1.0e0 / 66.0e0,
-    1.0e0 / 792.0e0, 1.0e0 / 15840.0e0, 1.0e0 / 665280.0e0 / );
+  pt_table(1) = 1.0e0;
+  pt_table(2) = 1.0e0 / 2.0e0;
+  pt_table(3) = 5.0e0 / 44.0e0;
+  pt_table(4) = 1.0e0 / 66.0e0;
+  pt_table(5) = 1.0e0 / 792.0e0;
+  pt_table(6) = 1.0e0 / 15840.0e0;
+  pt_table(7) = 1.0e0 / 665280.0e0;
   //C
   return_value = pt_table(j + 1);
   return return_value;
@@ -3452,7 +3458,9 @@ approximate_exp(
   exp_a(dimension(3, 3));
   //C
   bool scale = false;
-  fem::real_star_8 maxavalue = fem::max(fem::abs(a));
+  fem::real_star_8 maxavalue = fem::dmax1(fem::dmax1(fem::abs(a(1,1)),fem::abs(a(1,2)),fem::abs(a(1,3))),
+                                          fem::dmax1(fem::abs(a(2,1)),fem::abs(a(2,2)),fem::abs(a(2,3))),
+                                          fem::dmax1(fem::abs(a(3,1)),fem::abs(a(3,2)),fem::abs(a(3,3))));
   int matrixpower = fem::int0;
   fem::real_star_8 modmaxavalue = fem::zero<fem::real_star_8>();
   arr_2d<3, 3, fem::real_star_8> a_mod(fem::fill0);
@@ -3460,7 +3468,15 @@ approximate_exp(
     scale = true;
     matrixpower = fem::nint(log2(2.0e0 * maxavalue) + 0.e5);
     modmaxavalue = fem::pow(2.0e0, matrixpower);
-    a_mod = a / modmaxavalue;
+    unsigned int ii;
+    unsigned int jj;
+    FEM_DO_SAFE(ii, 1, 3)
+      {
+      FEM_DO_SAFE(jj, 1, 3)
+      {
+      a_mod(ii, jj) = a(ii, jj) / modmaxavalue;
+      }
+      }
   }
   else {
     a_mod = a;
