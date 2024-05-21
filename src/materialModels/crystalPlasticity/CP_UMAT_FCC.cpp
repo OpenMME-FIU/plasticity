@@ -652,7 +652,7 @@ nrfunction(
   fem::real_star_8 const& /* d */,
   fem::real_star_8& sse,
   arr_cref<fem::real_star_8> cts,
-  int& l1)
+  fem::real_star_8& l1)
 {
   func(dimension(12));
   gdot(dimension(12));
@@ -867,7 +867,7 @@ structmon(
   //C
   fem::real_star_8 dgammatx = 0.0f;
   //C
-  dgammatx = fem::max(eslip(1), eslip(2), eslip(3), eslip(4), eslip(5),
+  dgammatx = fem::dmax1(eslip(1), eslip(2), eslip(3), eslip(4), eslip(5),
     eslip(6), eslip(7), eslip(8), eslip(9), eslip(10), eslip(11), eslip(
     12));
   //C
@@ -1565,7 +1565,7 @@ cellsizemon(
   cts(dimension(46));
   statev(dimension(400));
   //C
-  fem::real_star_8 taurmax = fem::max(fem::abs(tau(1)), fem::abs(tau(2)),
+  fem::real_star_8 taurmax = fem::dmax1(fem::abs(tau(1)), fem::abs(tau(2)),
     fem::abs(tau(3)), fem::abs(tau(4)), fem::abs(tau(5)), fem::abs(tau(6)),
     fem::abs(tau(7)), fem::abs(tau(8)), fem::abs(tau(9)), fem::abs(tau(10)),
     fem::abs(tau(11)), fem::abs(tau(12)));
@@ -1657,7 +1657,7 @@ cellsize(
     }
   }
   //C
-  fem::real_star_8 taurmax = fem::max(taurange(1), taurange(2),
+  fem::real_star_8 taurmax = fem::dmax1(taurange(1), taurange(2),
     taurange(3), taurange(4), taurange(5), taurange(6), taurange(7),
     taurange(8), taurange(9), taurange(10), taurange(11), taurange(
     12));

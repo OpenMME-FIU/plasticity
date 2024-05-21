@@ -567,7 +567,68 @@ namespace fem {
     double const& v1,
     double const& v2) { return std::max(v1, v2); }
 
-  inline
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3) { return dmax1(dmax1(v1, v2), v3); }
+
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3,
+            double const& v4) { return dmax1(dmax1(v1, v2, v3), v4); }
+
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3,
+            double const& v4,
+            double const& v5) { return dmax1(dmax1(v1, v2, v3, v4), v5); }
+
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3,
+            double const& v4,
+            double const& v5,
+            double const& v6) { return dmax1(dmax1(v1, v2, v3, v4, v5), v6); }
+
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3,
+            double const& v4,
+            double const& v5,
+            double const& v6,
+            double const& v7) { return dmax1(dmax1(v1, v2, v3, v4, v5, v6), v7); }
+
+    inline
+    double
+    dmax1(
+            double const& v1,
+            double const& v2,
+            double const& v3,
+            double const& v4,
+            double const& v5,
+            double const& v6,
+            double const& v7,
+            double const& v8,
+            double const& v9,
+            double const& v10,
+            double const& v11,
+            double const& v12) { return dmax1(dmax1(v1, v2, v3, v4, v5, v6), dmax1(v7, v8, v9, v10, v11, v12)); }
+
+    inline
   double
   max(
     double const& v1,
