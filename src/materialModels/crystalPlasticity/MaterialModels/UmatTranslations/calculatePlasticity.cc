@@ -104,37 +104,37 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     unsigned int  numberOfCuts;
     FullMatrix<double> Delta_F,div_Delta_F;
       pcout << "calculatePlasticity\n";
-      arr_ref<fem::real_star_8, 1> stress; //Voight notation
-      arr_ref<fem::real_star_8> statev; //
-      arr_ref<fem::real_star_8, 2> ddsdde;
+      fem::arr_ref<fem::real_star_8, 1> stress; //Voight notation
+      fem::arr_ref<fem::real_star_8> statev; //
+      fem::arr_ref<fem::real_star_8, 2> ddsdde;
       fem::real_star_8& sse;
       fem::real_star_8 const& /* spd */;
       fem::real_star_8 const& /* scd */;
       fem::real_star_8 const& /* rpl */;
-      arr_cref<fem::real_star_8> /* ddsddt */;
-      arr_cref<fem::real_star_8> /* drplde */;
+      fem::arr_cref<fem::real_star_8> /* ddsddt */;
+      fem::arr_cref<fem::real_star_8> /* drplde */;
       fem::real_star_8 const& /* drpldt */;
-      arr_cref<fem::real_star_8> /* stran */;
-      arr_cref<fem::real_star_8> /* dstran */;
-      arr_cref<fem::real_star_8> time;
+      fem::arr_cref<fem::real_star_8> /* stran */;
+      fem::arr_cref<fem::real_star_8> /* dstran */;
+      fem::arr_cref<fem::real_star_8> time;
       fem::real_star_8 const& dtime;
       fem::real_star_8 const& /* temp */;
       fem::real_star_8 const& /* dtemp */;
-      arr_cref<fem::real_star_8> /* predef */;
-      arr_cref<fem::real_star_8> /* dpred */;
-      str_cref /* cmname */;
+      fem::arr_cref<fem::real_star_8> /* predef */;
+      fem::arr_cref<fem::real_star_8> /* dpred */;
+      fem::str_cref /* cmname */;
       int ndi;
       int nshr;
       int ntens;
       int nstatv;
-      arr_cref<fem::real_star_8> props;
+      fem::arr_cref<fem::real_star_8> props;
       int nprops;
-      arr_cref<fem::real_star_8> /* coords */;
-      arr_cref<fem::real_star_8, 2> /* drot */;
+      fem::arr_cref<fem::real_star_8> /* coords */;
+      fem::arr_cref<fem::real_star_8, 2> /* drot */;
       fem::real_star_8 pnewdt;
       fem::real_star_8 const& /* celent */;
-      arr_cref<fem::real_star_8, 2> dfgrd0;
-      arr_cref<fem::real_star_8, 2> dfgrd1;
+      fem::arr_cref<fem::real_star_8, 2> dfgrd0;
+      fem::arr_cref<fem::real_star_8, 2> dfgrd1;
       int const& /* noel */;
       int const& /* npt */;
       fem::real_star_8 const& /* layer */;
@@ -145,7 +145,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       ndi = dim;
       nshr = (dim*dim - dim)/2;
       ntens = ndi + nshr;
-      nstatev = this->userInputs.numberofUserMatStateVar1;
+      nstatv = this->userInputs.numberofUserMatStateVar1;
       nprops = this->userInputs.numberofUserMatConstants1;
       stress(fem::dimension(ntens));
       statev(fem::dimension(nstatv));
@@ -189,6 +189,8 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               //check voigt ordering of umat vs this script
+              unsigned int ib=0;
+              unsigned int ia=0;
               if (i == j)
                   ia = i;
               else

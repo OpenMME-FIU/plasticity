@@ -7,14 +7,17 @@ using namespace fem::major_types;
 
 using fem::common;
 
-arr_ref<fem::real_star_8, 2>
+//arr_2d<3, 3, fem::real_star_8>
+void
 matmult(
         arr_cref<fem::real_star_8, 2> a,
-        arr_cref<fem::real_star_8, 2> b)
+        arr_cref<fem::real_star_8, 2> b,
+        arr_ref<fem::real_star_8, 2> return_value)
 {
-    fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
+//    arr_2d<3, 3, fem::real_star_8> return_value;
     a(dimension(3, 3));
     b(dimension(3, 3));
+    return_value(dimension(3,3));
     int i = fem::int0;
     int j = fem::int0;
     int k = fem::int0;
@@ -26,7 +29,7 @@ matmult(
             }
         }
     }
-    return return_value;
+//    return return_value;
 }
 
 void
@@ -257,6 +260,7 @@ inverse3(
   arr_cref<fem::real_star_8, 2> a,
   arr_ref<fem::real_star_8, 2> b)
 {
+    arr_2d<3, 3, fem::real_star_8> bb;
   a(dimension(3, 3));
   b(dimension(3, 3));
   //C
@@ -272,20 +276,29 @@ inverse3(
   fem::real_star_8 det = a(1, 1) * b(1, 1) + a(1, 2) * b(2, 1) + a(1,
     3) * b(3, 1);
   //C
-  arr_2d<3, 3, fem::real_star_8> unit(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> unit;
+  arr_2d<3, 3, fem::real_star_8> copy;
   //unit = 0.0f;
   int i = fem::int0;
   int k = fem::int0;
-  FEM_DO_SAFE(i, 1, 3) {
-    unit(i, i) = 2.0f;
-  }
+
     FEM_DO_SAFE(i, 1, 3)
     {
         FEM_DO_SAFE(k, 1, 3) {
-            b(i, k) = b(i,k)/det;
+            copy(i, k) = b(i,k)/det;
         }
     }
-  b = matmult(b, (unit - matmult(a, b)));
+    matmult(a, copy, bb);
+
+    FEM_DO_SAFE(i, 1, 3) {
+        FEM_DO_SAFE(k, 1, 3)
+        {
+            unit(i, k) = -bb(i, k);
+            if (i == k)
+                unit(i, i) += 2.0f;
+        }
+    }
+  matmult(copy, unit, b);
   //C
 }
 
@@ -3422,9 +3435,10 @@ pade_factor(
   //C
   s = unit;
   fem::integer_star_4 j = fem::zero<fem::integer_star_4>();
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> prod;
   FEM_DOSTEP(j, 6, 1, -1) {
-    s = unit + (pade_coefficient(j) / pade_coefficient(j - 1)) * matmult(a, s);
+      matmult(a, s, prod)
+    s = unit + (pade_coefficient(j) / pade_coefficient(j - 1)) * prod;
   }
   //C
 }
@@ -3456,14 +3470,18 @@ approximate_exp(
   arr_2d<3, 3, fem::real_star_8> n(fem::fill0);
   pade_factor(a_mod, n);
   arr_2d<3, 3, fem::real_star_8> d_inv(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> a_copy(fem::fill0);
+    arr_2d<3, 3, fem::real_star_8> a_copy2(fem::fill0);
   inverse3(d, d_inv);
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
-  exp_a = matmult(d_inv, n);
+//  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+  matmult(d_inv, n, a_copy);
+  a_copy2 = a_copy;
   //C
   int loopvar = fem::int0;
   if (scale) {
     FEM_DO_SAFE(loopvar, 1, matrixpower) {
-      exp_a = matmult(exp_a, exp_a);
+      matmult(a_copy, a_copy2, exp_a);
+      a_copy = exp_a;
     }
   }
   //C
@@ -3498,7 +3516,7 @@ plasticgradientinv1(
   int n = fem::int0;
   arr_2d<3, 3, fem::real_star_8> a2(fem::fill0);
   arr_2d<3, 3, fem::real_star_8> a3(fem::fill0);
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+//  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
   arr_2d<3, 3, fem::real_star_8> a4(fem::fill0);
   if (sum < 1.0e-5f) {
     //C
@@ -3519,7 +3537,7 @@ plasticgradientinv1(
     inverse3(fpinv0, a2);
     approximate_exp(vg * dtincr, a3);
     //C
-    a4 = matmult(a3, a2);
+    matmult(a3, a2, a4);
     inverse3(a4, fpinv);
   }
   //C
