@@ -3443,7 +3443,7 @@ pade_factor(
   fem::integer_star_4 j = fem::zero<fem::integer_star_4>();
   arr_2d<3, 3, fem::real_star_8> prod;
   FEM_DOSTEP(j, 6, 1, -1) {
-      matmult(a, s, prod)
+      matmult(a, s, prod);
     s = unit + (pade_coefficient(j) / pade_coefficient(j - 1)) * prod;
   }
   //C
@@ -3468,8 +3468,8 @@ approximate_exp(
     scale = true;
     matrixpower = fem::nint(log2(2.0e0 * maxavalue) + 0.e5);
     modmaxavalue = fem::pow(2.0e0, matrixpower);
-    unsigned int ii;
-    unsigned int jj;
+    int ii;
+    int jj;
     FEM_DO_SAFE(ii, 1, 3)
       {
       FEM_DO_SAFE(jj, 1, 3)
@@ -3497,7 +3497,15 @@ approximate_exp(
   if (scale) {
     FEM_DO_SAFE(loopvar, 1, matrixpower) {
       matmult(a_copy, a_copy2, exp_a);
-      a_copy = exp_a;
+      int ii;
+      int jj;
+      FEM_DO_SAFE(ii, 1, 3)
+      {
+          FEM_DO_SAFE(jj, 1, 3)
+          {
+              a_copy(ii, jj) = exp_a(ii, jj);
+          }
+      }
     }
   }
   //C
