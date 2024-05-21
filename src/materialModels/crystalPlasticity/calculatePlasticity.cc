@@ -121,12 +121,12 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_cref<fem::real_star_8> predef;//
       fem::arr_cref<fem::real_star_8> dpred;//
       fem::str_cref cmname;//
-      int ndi;
-      int nshr;
-      int ntens;
-      int nstatv;
+      int const ndi=dim;
+      int const nshr=(dim*dim - dim)/2;
+      int const ntens=ndi + nshr;
+      int const nstatv = this->userInputs.numberofUserMatStateVar1;
 
-      int nprops;
+      int const nprops = this->userInputs.numberofUserMatConstants1;
       fem::arr_cref<fem::real_star_8> coords ;//
       fem::arr_cref<fem::real_star_8, 2> drot ;//
       fem::real_star_8 pnewdt;
@@ -139,11 +139,6 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       int const& kstep;
       int const& kinc;//
       this->pcout << "calculatePlasticity2\n";
-      ndi = dim;
-      nshr = (dim*dim - dim)/2;
-      ntens = ndi + nshr;
-      nstatv = this->userInputs.numberofUserMatStateVar1;
-      nprops = this->userInputs.numberofUserMatConstants1;
       fem::arr_1d<nprops, fem::real_star_8> props;
       fem::arr_1d<nstatv, fem::real_star_8> statev;
       fem::arr_1d<ntens, fem::real_star_8> stress; //Voigt notation
