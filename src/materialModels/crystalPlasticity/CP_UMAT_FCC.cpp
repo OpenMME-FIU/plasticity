@@ -3508,6 +3508,8 @@ approximate_exp(
   inverse3(d, d_inv);
 //  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
   matmult(d_inv, n, a_copy);
+  int ii;
+  int jj;
     FEM_DO_SAFE(ii, 1, 3)
     {
         FEM_DO_SAFE(jj, 1, 3)
