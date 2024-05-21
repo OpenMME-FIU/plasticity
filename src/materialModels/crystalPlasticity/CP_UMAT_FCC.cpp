@@ -3508,7 +3508,15 @@ approximate_exp(
   inverse3(d, d_inv);
 //  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
   matmult(d_inv, n, a_copy);
-  a_copy2 = a_copy;
+    FEM_DO_SAFE(ii, 1, 3)
+    {
+        FEM_DO_SAFE(jj, 1, 3)
+        {
+            a_copy2(ii, jj) = a_copy(ii, jj);
+        }
+    }
+}
+//  a_copy2 = a_copy;
   //C
   int loopvar = fem::int0;
   if (scale) {
