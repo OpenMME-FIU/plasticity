@@ -32,7 +32,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 
     /////////////////////////////////////////////////////////
     FullMatrix<double> FE_t(dim,dim),FP_t(dim,dim),F_t(dim,dim);  //Elastic, Plastic, and total deformation gradient
-    FullMatrix<double> E_t(dim,dim) // Green Strain for UMAT
+    FullMatrix<double> E_t(dim,dim); // Green Strain for UMAT
     Vector<double> s_alpha_t(n_Tslip_systems),slipfraction_t(n_slip_systems),twinfraction_t(n_twin_systems); // Slip resistance
     Vector<double> W_kh_t(n_Tslip_systems),W_kh_t1(n_Tslip_systems),W_kh_t2(n_Tslip_systems),signed_slip_t(n_Tslip_systems) ;
     Vector<double> rot1(dim);// Crystal orientation (Rodrigues representation)
@@ -116,19 +116,21 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_1d<1, fem::real_star_8> predef;//
       fem::arr_1d<1, fem::real_star_8> dpred;//
       std::string cmname;//
-      if (dim==2){
-          int const& ndi=2;
-          int const& nshr=1;
-          int const& ntens=3;
-      }
-      else {
-          int const& ndi=3;
-          int const& nshr=3;
-          int const& ntens=6;
-      }
-
-      int const& nstatv = 1000;//not allowed because fem:: is so dumb... this->userInputs.numberofUserMatStateVar1;
-      int const& nprops = 1000; //not allowed because fem:: is so dumb... this->userInputs.numberofUserMatConstants1;
+//      if (dim==2){
+//          int const& ndi=2;
+//          int const& nshr=1;
+//          int const& ntens=3;
+//      }
+//      else {
+//
+//      }
+        int const dim0=3;
+        int const dim2=6;
+      int const ndi=dim0; // SO DUMB
+      int const nshr=dim0;
+      int const ntens=dim2;
+      int const nstatv = 1000;//not allowed because fem:: is so dumb... this->userInputs.numberofUserMatStateVar1;
+      int const nprops = 1000; //not allowed because fem:: is so dumb... this->userInputs.numberofUserMatConstants1;
       int nstatv_real = this->userInputs.numberofUserMatStateVar1;
       int nprops_real = this->userInputs.numberofUserMatConstants1;
       fem::arr_1d<dim, fem::real_star_8> coords ;//
