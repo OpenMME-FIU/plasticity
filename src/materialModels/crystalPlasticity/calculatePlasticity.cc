@@ -116,12 +116,21 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_1d<1, fem::real_star_8> predef;//
       fem::arr_1d<1, fem::real_star_8> dpred;//
       std::string cmname;//
-      int const& ndi=dim;
-      int const& nshr=(dim*dim - dim)/2;
-      int const& ntens=dim + (dim*dim - dim)/2;
-      int const& nstatv = this->userInputs.numberofUserMatStateVar1;
+      if (dim==2){
+          int const& ndi=2;
+          int const& nshr=1;
+          int const& ntens=3;
+      }
+      else {
+          int const& ndi=3;
+          int const& nshr=3;
+          int const& ntens=6;
+      }
 
-      int const& nprops = this->userInputs.numberofUserMatConstants1;
+      int const& nstatv = 1000;//not allowed because fem:: is so dumb... this->userInputs.numberofUserMatStateVar1;
+      int const& nprops = 1000; //not allowed because fem:: is so dumb... this->userInputs.numberofUserMatConstants1;
+      int nstatv_real = this->userInputs.numberofUserMatStateVar1;
+      int nprops_real = this->userInputs.numberofUserMatConstants1;
       fem::arr_1d<dim, fem::real_star_8> coords ;//
       fem::arr_2d<dim, dim, fem::real_star_8> drot ;//
       fem::real_star_8 pnewdt;
@@ -146,10 +155,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
       fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
 //      time(fem::dimension(2));
-      for(int i=0; i<nstatv;i++){
+      for(int i=0; i<nstatv_real;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
       }
-      for(int i=0; i<nprops;i++){
+      for(int i=0; i<nprops_real;i++){
           props(i+1) = UserMatConstants[i];
       }
       for(unsigned int i=0 ; i<dim ; i++){
@@ -200,7 +209,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               }
           }
       }
-      for (int i; i<nstatv;i++){
+      for (int i; i<nstatv_real;i++){
           stateVar_iter[cellID][quadPtID][i]=statev(i+1);
       }
       for(unsigned int i=0 ; i<dim ; i++){
