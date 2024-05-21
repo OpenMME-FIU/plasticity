@@ -155,23 +155,23 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       dfgrd0(fem::dimension(dim, dim));
       dfgrd1(fem::dimension(dim, dim));
       for(unsigned int i=0; i<nstatv;i++){
-          statev[i] = stateVar_conv[cellID][quadPtID][i];
+          statev(i+1) = stateVar_conv[cellID][quadPtID][i];
       }
       for(unsigned int i=0; i<nprops;i++){
-          props[i] = UserMatConstants[i];
+          props(i+1) = UserMatConstants[i];
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
-              dfgrd0[i][j]=F[i][j];
+              dfgrd0(i+1,j+1)=F[i][j];
               sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
-                  stress[i] = T[i][j];
+                  stress(i+1) = T[i][j];
               else
-                  stress[6-i-j] = T[i][j];
+                  stress(7-i-j) = T[i][j];
           }
       }
       dfgrd1(fem::dimension(dim, dim));
@@ -203,20 +203,20 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                       else
                           ib = 6 - k - l;
 
-                      dP_dF[i][j][k][l]=ddsdde[ia][ib];
+                      dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
                   }
               }
           }
       }
       for (unsigned int i; i<nstatv;i++){
-          stateVar_iter[cellID][quadPtID][i]=statev[i]
+          stateVar_iter[cellID][quadPtID][i]=statev(i+1);
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
-                  T_tau[i][j] = stress[i];
+                  T_tau[i][j] = stress(i+1);
               else
-                  T_tau[i][j] = stress[6-i-j];
+                  T_tau[i][j] = stress(7-i-j);
           }
       }
 

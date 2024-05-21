@@ -3444,7 +3444,16 @@ pade_factor(
   arr_2d<3, 3, fem::real_star_8> prod;
   FEM_DOSTEP(j, 6, 1, -1) {
       matmult(a, s, prod);
-    s = unit + (pade_coefficient(j) / pade_coefficient(j - 1)) * prod;
+        int ii;
+        int jj;
+        FEM_DO_SAFE(ii, 1, 3)
+        {
+            FEM_DO_SAFE(jj, 1, 3)
+            {
+                s(ii,jj) = unit(ii,jj) + (pade_coefficient(j) / pade_coefficient(j - 1)) * prod(ii,jj);
+            }
+        }
+
   }
   //C
 }
@@ -3479,7 +3488,15 @@ approximate_exp(
       }
   }
   else {
-    a_mod = a;
+      int ii;
+      int jj;
+      FEM_DO_SAFE(ii, 1, 3)
+      {
+          FEM_DO_SAFE(jj, 1, 3)
+          {
+              a_mod(ii, jj) = a(ii, jj);
+          }
+      }
   }
   arr_2d<3, 3, fem::real_star_8> d(fem::fill0);
   pade_factor(-a_mod, d);
