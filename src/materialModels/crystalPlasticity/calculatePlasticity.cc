@@ -113,17 +113,17 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::real_star_8 const dtime= 0.0f;
       fem::real_star_8 const temp11= 0.0f;//
       fem::real_star_8 const dtemp= 0.0f;//
-      fem::arr_cref<fem::real_star_8> predef;//
-      fem::arr_cref<fem::real_star_8> dpred;//
-      fem::str_cref cmname;//
+      fem::arr_1d<1, fem::real_star_8> predef;//
+      fem::arr_1d<1, fem::real_star_8> dpred;//
+      std::string cmname;//
       int const ndi=dim;
       int const nshr=(dim*dim - dim)/2;
       int const ntens=ndi + nshr;
       int const nstatv = this->userInputs.numberofUserMatStateVar1;
 
       int const nprops = this->userInputs.numberofUserMatConstants1;
-      fem::arr_cref<fem::real_star_8> coords ;//
-      fem::arr_cref<fem::real_star_8, 2> drot ;//
+      fem::arr_1d<dim, fem::real_star_8> coords ;//
+      fem::arr_2d<dim, dim, fem::real_star_8> drot ;//
       fem::real_star_8 pnewdt;
       fem::real_star_8 const celent = 0.0f;//
       fem::arr_1d<ntens, fem::real_star_8> ddsddt;//
@@ -132,8 +132,8 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       fem::arr_1d<ntens, fem::real_star_8> stran ;//
       fem::arr_1d<ntens, fem::real_star_8> dstran;//
       fem::arr_1d<2, fem::real_star_8> time;
-      int const noel = 0;//
-      int const npt = 0;//
+      int const noel = cellID;//
+      int const npt = quadPtID;//
       fem::real_star_8 const layer = 0.0f;//
       int const kspt = 0;//
       int const kstep = 0;

@@ -2974,7 +2974,7 @@ umat(
   const fem::real_star_8 mi_ea = 1;
   arr_1d<48, fem::real_star_8> cts(fem::fill0);
   const fem::real_star_8 h1 = 1;
-  arr_2d<3, 3, fem::real_star_8> rotate(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> rotate(fem::fill0); //need to connect this next
   const fem::real_star_8 h2 = 0;
   const fem::real_star_8 h3 = 0;
   const fem::real_star_8 c11 = 249000000000.0f;
