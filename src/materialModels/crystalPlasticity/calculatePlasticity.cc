@@ -226,10 +226,14 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               if(i == j)
               {
                   T_tau[i][j] = stress(i + 1);
-                  if (cellID+quadPtID == 0) {this->pcout << "after umat loop \n" << stress(i+1) <<"\t" <<T_tau[i][j] <<"\n";}
+                  if (cellID+quadPtID == 0) {this->pcout << "after umat loop \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
 
               }
-              else { T_tau[i][j] = stress(7 - i - j); }
+              else
+              {
+                  T_tau[i][j] = stress(7 - i - j);
+                  if (cellID+quadPtID == 0) {this->pcout << "after umat else \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
+              }
           }
       }
 
@@ -246,11 +250,17 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //      temp.equ(1.0 / det_FE_tau, temp);
 //      temp.mTmult(T_tau, FE_tau);
 
+//    det_F_tau = F_tau.determinant();
+//    temp.invert(F_tau);
+//    F_inv_tau.equ(1.0,temp);
+//    T_tau.mTmult(P_tau, temp);
+//    P_tau.equ(det_F_tau, P_tau);
+
       det_F_tau = F_tau.determinant();
     temp.invert(F_tau);
     F_inv_tau.equ(1.0,temp);
-    P_tau.mTmult(T_tau, temp); //CHECK ME!! for transpose
-    P_tau.equ(det_F_tau, P_tau);
+    P_tau.mTmult(T_tau, F_tau); //CHECK ME!! for transpose
+    P_tau.equ(1/det_F_tau, P_tau);
     //P_tau; //Check me too!
     if (cellID+quadPtID == 0)
     {
