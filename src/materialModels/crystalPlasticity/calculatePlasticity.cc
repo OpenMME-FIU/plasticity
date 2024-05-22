@@ -158,8 +158,8 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::arr_2d<ntens, ntens, fem::real_star_8> ddsdde;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
-    time11(1) = this->currentTime;
-    time11(2) = this->currentTime;
+    time11(1) = this->currentIncrement * this->delT;
+    time11(2) = this->currentIncrement * this->delT;
 //      time(fem::dimension(2));
       for(int i=0; i<nstatv_real;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
@@ -264,7 +264,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       F_inv_tau.equ(1.0,temp);
       P_tau.mTmult(T_tau, temp); //CHECK ME!! for transpose
       P_tau.equ(det_F_tau, P_tau);
-      P_tau; //Check me too!
+      //P_tau; //Check me too!
 
 //    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
