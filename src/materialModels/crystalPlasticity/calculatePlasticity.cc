@@ -223,7 +223,12 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       }
       for(int i=0 ; i<dim ; i++){
           for(int j=0 ; j<dim ; j++){
-              if(i == j) { T_tau[i][j] = stress(i + 1); }
+              if(i == j)
+              {
+                  T_tau[i][j] = stress(i + 1);
+                  if (cellID+quadPtID == 0) {this->pcout << "after umat loop \n" << stress(i+1) <<"\t" <<T_tau[i][j] <<"\n";}
+
+              }
               else { T_tau[i][j] = stress(7 - i - j); }
           }
       }
