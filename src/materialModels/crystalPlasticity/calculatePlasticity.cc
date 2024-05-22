@@ -159,7 +159,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
     time11(1) = this->currentTime;
-    time11(2) = this->delT;
+    time11(2) = this->currentTime;
 //      time(fem::dimension(2));
       for(int i=0; i<nstatv_real;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
