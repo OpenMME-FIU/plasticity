@@ -190,7 +190,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                  0,0,0,0,0,time,dtime,0,0,0,0,"",
                  ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
-                 0,0,0,0,kstep,0);
+                 noel,npt,0,0,kstep,0);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               F_tau[i][j]=dfgrd1(i+1,j+1);

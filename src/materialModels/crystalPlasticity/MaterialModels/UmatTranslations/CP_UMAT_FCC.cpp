@@ -2943,8 +2943,8 @@ umat(
   fem::real_star_8 const& /* celent */,
   arr_cref<fem::real_star_8, 2> dfgrd0,
   arr_cref<fem::real_star_8, 2> dfgrd1,
-  int const& /* noel */,
-  int const& /* npt */,
+  int const& noel,
+  int const& npt,
   fem::real_star_8 const& /* layer */,
   int const& /* kspt */,
   int const& kstep,
@@ -3060,6 +3060,10 @@ umat(
   //C
   //CREAL*8 (A-H,O-Z)
   //C
+  if (noel+npt==0)
+  {
+      std::cout << "inside umat\n";
+  }
   cts(48) = mi_ea;
   //C
   if (h1 == 999) {

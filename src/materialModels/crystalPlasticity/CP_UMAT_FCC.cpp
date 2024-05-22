@@ -3074,6 +3074,10 @@ umat(
   //C
   //CREAL*8 (A-H,O-Z)
   //C
+  if (npt+noel==0)
+  {
+      std::cout << 'inside umat\n';
+  }
   cts(48) = mi_ea;
   //C
   if (h1 == 999) {
