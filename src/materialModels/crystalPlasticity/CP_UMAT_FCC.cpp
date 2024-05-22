@@ -2977,12 +2977,12 @@ umat(
   arr_2d<3, 3, fem::real_star_8> rotate(fem::fill0); //need to connect this next
   const fem::real_star_8 h2 = 0;
   const fem::real_star_8 h3 = 0;
-  const fem::real_star_8 c11 = 249000000000.0f;
-  const fem::real_star_8 c12 = 155000000000.0f;
-  const fem::real_star_8 c44 = 114600000000.0f;
+  const fem::real_star_8 c11 = 249000000000.0l;
+  const fem::real_star_8 c12 = 155000000000.0l;
+  const fem::real_star_8 c44 = 114600000000.0l;
   const fem::real_star_8 skcy = 4.5f;
-  const fem::real_star_8 shm = 80600000000.0f;
-  const fem::real_star_8 bv = 2.56e-10f;
+  const fem::real_star_8 shm = 80600000000.0l;
+  const fem::real_star_8 bv = 2.56e-10l;
   const fem::real_star_8 dkm = 1;
   const fem::real_star_8 ysg = 2e-09f;
   const fem::real_star_8 ysc = 5e-08f;
@@ -3000,8 +3000,8 @@ umat(
   const fem::real_star_8 pp = 0.67f;
   const fem::real_star_8 pq = 1.5f;
   const fem::real_star_8 s0t = 120000000;
-  const fem::real_star_8 shm0 = 92600000000.0f;
-  const fem::real_star_8 af = 1000000000000.0f;
+  const fem::real_star_8 shm0 = 92600000000.0l;
+  const fem::real_star_8 af = 1000000000000.0l;
   const fem::real_star_8 phi = 0.49f;
   const fem::real_star_8 vcs0 = 1.67e-26f;
   const fem::real_star_8 dd0 = 100000000.0f;
@@ -3355,7 +3355,8 @@ umat(
         std::cout << "fpinv0 inverse plastic def grad\n"<< fpinv0(1,1)<<"\t"<< fpinv0(1,2)<<"\t"<< fpinv0(1,3)<<"\n"<< fpinv0(2,1)<<"\t"<< fpinv0(2,2)<<"\t"<< fpinv0(2,3)<<"\n"<< fpinv0(3,1)<<"\t"<< fpinv0(3,2)<<"\t"<< fpinv0(3,3)<<"\n";
         std::cout << "fel Elastic Def Grad\n"<< fel(1,1)<<"\t"<< fel(1,2)<<"\t"<< fel(1,3)<<"\n"<< fel(2,1)<<"\t"<< fel(2,2)<<"\t"<< fel(2,3)<<"\n"<< fel(3,1)<<"\t"<< fel(3,2)<<"\t"<< fel(3,3)<<"\n";
         std::cout << "eel Elastic Green strain\n"<< eel(1,1)<<"\t"<< eel(1,2)<<"\t"<< eel(1,3)<<"\n"<< eel(2,1)<<"\t"<< eel(2,2)<<"\t"<< eel(2,3)<<"\n"<< eel(3,1)<<"\t"<< eel(3,2)<<"\t"<< eel(3,3)<<"\n";
-        std::cout << "RSS Tau\n"<< tau(1)<<"\t"<< tau(2)<<"\t"<< tau(3)<<"\t"<< tau(4)<<"\t"<< tau(5)<<"\t"<< tau(6)<<"\t"<< tau(7)<<"\t"<< tau(8)<<"\t"<< tau(9)<<"\t"<< tau(10)<<"\t"<< tau(11)<<"\t"<< tau(12)<<"\t"
+        std::cout << "RSS Tau\n"<< tau(1)<<"\t"<< tau(2)<<"\t"<< tau(3)<<"\t"<< tau(4)<<"\t"<< tau(5)<<"\t"<< tau(6)<<"\t"<< tau(7)<<"\t"<< tau(8)<<"\t"<< tau(9)<<"\t"<< tau(10)<<"\t"<< tau(11)<<"\t"<< tau(12)<<"\t";
+        std::cout << "gamma dot\n"<< gdot(1)<<"\t"<< gdot(2)<<"\t"<< gdot(3)<<"\t"<< gdot(4)<<"\t"<< gdot(5)<<"\t"<< gdot(6)<<"\t"<< gdot(7)<<"\t"<< gdot(8)<<"\t"<< gdot(9)<<"\t"<< gdot(10)<<"\t"<< gdot(11)<<"\t"<< gdot(12)<<"\t";
         std::cout << "time " << time(1) <<"\t" << time(2)<<"\t" << dtime<<"\n";
     }
   //C
