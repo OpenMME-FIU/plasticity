@@ -136,7 +136,7 @@ void crystalPlasticity<dim>::getElementalValues(FEValues<dim>& fe_values,
 				for (unsigned int i=0; i<dim; ++i){
 					F[i][i]+=1;
 				}
-                if (cellID+quadPtID == 0)
+                if (cellID+q == 0)
                 {
                     this->pcout << "before plasticity\t" << P[0][0] <<"\n";
                 }
@@ -144,7 +144,7 @@ void crystalPlasticity<dim>::getElementalValues(FEValues<dim>& fe_values,
 				//Update strain, stress, and tangent for current time step/quadrature point
 				calculatePlasticity(cellID, q, 1);
 
-                if (cellID+quadPtID == 0)
+                if (cellID+q == 0)
                 {
                     this->pcout << "after plasticity\t" << P[0][0] <<"\n";
                 }
