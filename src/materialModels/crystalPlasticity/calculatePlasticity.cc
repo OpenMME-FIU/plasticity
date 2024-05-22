@@ -171,6 +171,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
+
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
@@ -179,6 +180,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                   stress(7-i-j) = T[i][j];
           }
       }
+    if (cellID+quadPtID == 0)
+    {
+        this->pcout << "calculatePlasticity\n" << F << "F" << dfgrd0 << "dfgrd0" << T << "T" << stress << "stress";
+    }
 //dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
