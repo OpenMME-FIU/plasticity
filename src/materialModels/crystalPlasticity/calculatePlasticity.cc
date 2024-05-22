@@ -261,7 +261,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 
       det_F_tau = F_tau.determinant();
     temp.invert(F_tau);
-    F_inv_tau.equ(1.0,temp);
+    F_inv_tau.equ(1.0,temp); // WHY IS THIS ALL MESSING UP???
     P_tau.mTmult(T_tau, F_tau); //CHECK ME!! for transpose
     P_tau.equ(1/det_F_tau, P_tau);
     //P_tau; //Check me too!
