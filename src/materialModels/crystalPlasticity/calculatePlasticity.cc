@@ -251,7 +251,13 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       det_F_tau = F_tau.determinant();
     if (cellID+quadPtID == 0)
     {
-        this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << dfgrd1(1,1) << " dfgrd1 " << T_tau[0][0] << " T " << stress(1) << " stress\n";
+        this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << T_tau[0][0] << " T " << stress(1) << " stress\n";
+        this->pcout << "ddsdde\n" << ddsdde(1,1) << "\t"<< ddsdde(1,2) << "\t"<< ddsdde(1,3) << "\t"<< ddsdde(1,4) << "\t"<< ddsdde(1,5) << "\t"<< ddsdde(1,6) << "\n";
+        this->pcout << ddsdde(2,1) << "\t"<< ddsdde(2,2) << "\t"<< ddsdde(2,3) << "\t"<< ddsdde(2,4) << "\t"<< ddsdde(2,5) << "\t"<< ddsdde(2,6) << "\n";
+        this->pcout << ddsdde(3,1) << "\t"<< ddsdde(3,2) << "\t"<< ddsdde(3,3) << "\t"<< ddsdde(3,4) << "\t"<< ddsdde(3,5) << "\t"<< ddsdde(3,6) << "\n";
+        this->pcout << ddsdde(4,1) << "\t"<< ddsdde(4,2) << "\t"<< ddsdde(4,3) << "\t"<< ddsdde(4,4) << "\t"<< ddsdde(4,5) << "\t"<< ddsdde(4,6) << "\n";
+        this->pcout << ddsdde(5,1) << "\t"<< ddsdde(5,2) << "\t"<< ddsdde(5,3) << "\t"<< ddsdde(5,4) << "\t"<< ddsdde(5,5) << "\t"<< ddsdde(5,6) << "\n";
+        this->pcout << ddsdde(6,1) << "\t"<< ddsdde(6,2) << "\t"<< ddsdde(6,3) << "\t"<< ddsdde(6,4) << "\t"<< ddsdde(6,5) << "\t"<< ddsdde(6,6) << "\n";
     }
       temp.invert(F_tau);
       F_inv_tau.equ(1.0,temp);
