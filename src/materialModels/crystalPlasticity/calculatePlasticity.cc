@@ -179,10 +179,8 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //    stress(6) = s(2, 3);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
-              if(i == j)
-                  stress(i+1) = T[i][j]; //add stran and E here?
-              else
-                  stress(7-i-j) = T[i][j];
+              if(i == j) { stress(i + 1) = T[i][j]; }//add stran and E here?
+              else { stress(7 - i - j) = T[i][j]; }
           }
       }
     if (cellID+quadPtID == 0)
@@ -202,22 +200,18 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               F_tau[i][j]=dfgrd1(i+1,j+1);
           }
       } //This isn't updated in the UMAT the way I expected...
-      for(unsigned int i=0 ; i<dim ; i++){
-          for(unsigned int j=0 ; j<dim ; j++){
+      for(int i=0 ; i<dim ; i++){
+          for(int j=0 ; j<dim ; j++){
               //check voigt ordering of umat vs this script
-              unsigned int ib=0;
-              unsigned int ia=0;
-              if (i == j)
-                  ia = i;
-              else
-                  ia = 6 - i - j;
-              for(unsigned int k=0 ; k<dim ; k++){
-                  for(unsigned int l=0 ; l<dim ; l++){
+              int ib=0;
+              int ia=0;
+              if (i == j) { ia = i; }
+              else { ia = 6 - i - j; }
+              for(int k=0 ; k<dim ; k++){
+                  for(int l=0 ; l<dim ; l++){
 
-                      if (k == l)
-                          ib = k;
-                      else
-                          ib = 6 - k - l;
+                      if (k == l) { ib = k; }
+                      else { ib = 6 - k - l; }
 
                       dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
                   }
@@ -227,12 +221,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       for (int i; i<nstatv_real;i++){
           stateVar_iter[cellID][quadPtID][i]=statev(i+1);
       }
-      for(unsigned int i=0 ; i<dim ; i++){
-          for(unsigned int j=0 ; j<dim ; j++){
-              if(i == j)
-                  T_tau[i][j] = stress(i+1);
-              else
-                  T_tau[i][j] = stress(7-i-j);
+      for(int i=0 ; i<dim ; i++){
+          for(int j=0 ; j<dim ; j++){
+              if(i == j) { T_tau[i][j] = stress(i + 1); }
+              else { T_tau[i][j] = stress(7 - i - j); }
           }
       }
 
