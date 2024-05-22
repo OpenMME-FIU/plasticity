@@ -150,7 +150,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::real_star_8 const layer = 0.0f;//
     int const kspt = 0;//
     int const kstep = 0;
-    int const kinc = 0;//
+    int kinc = this->currentIncrement;//
 //    this->pcout << "calculatePlasticity2\n";
     fem::arr_1d<nprops, fem::real_star_8> props;
     fem::arr_1d<nstatv, fem::real_star_8> statev;
@@ -158,7 +158,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::arr_2d<ntens, ntens, fem::real_star_8> ddsdde;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
-    time11(1) = this->totalT;
+    time11(1) = this->currentTime;
     time11(2) = this->delT;
 //      time(fem::dimension(2));
       for(int i=0; i<nstatv_real;i++){

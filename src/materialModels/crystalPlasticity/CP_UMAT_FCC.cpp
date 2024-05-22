@@ -3350,7 +3350,9 @@ umat(
     if (npt+noel==0)
     {
         std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
-        std::cout << "time " << time(0) <<"\t" << time(1)<<"\n";
+        std::cout << "dfgrd0\n"<< dfgrd0(1,1)<<"\t"<< dfgrd0(1,2)<<"\t"<< dfgrd0(1,3)<<"\n"<< dfgrd0(2,1)<<"\t"<< dfgrd0(2,2)<<"\t"<< dfgrd0(2,3)<<"\n"<< dfgrd0(3,1)<<"\t"<< dfgrd0(3,2)<<"\t"<< dfgrd0(3,3)<<"\n";
+        std::cout << "dfgrd1\n"<< dfgrd1(1,1)<<"\t"<< dfgrd1(1,2)<<"\t"<< dfgrd1(1,3)<<"\n"<< dfgrd1(2,1)<<"\t"<< dfgrd1(2,2)<<"\t"<< dfgrd1(2,3)<<"\n"<< dfgrd1(3,1)<<"\t"<< dfgrd1(3,2)<<"\t"<< dfgrd1(3,3)<<"\n";
+        std::cout << "time " << time(1) <<"\t" << time(2)<<"\n";
     }
   //C
   //C:  END OF UMAT
