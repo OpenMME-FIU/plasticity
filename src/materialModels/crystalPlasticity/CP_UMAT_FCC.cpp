@@ -3355,7 +3355,8 @@ umat(
         std::cout << "fpinv0 inverse plastic def grad\n"<< fpinv0(1,1)<<"\t"<< fpinv0(1,2)<<"\t"<< fpinv0(1,3)<<"\n"<< fpinv0(2,1)<<"\t"<< fpinv0(2,2)<<"\t"<< fpinv0(2,3)<<"\n"<< fpinv0(3,1)<<"\t"<< fpinv0(3,2)<<"\t"<< fpinv0(3,3)<<"\n";
         std::cout << "fel Elastic Def Grad\n"<< fel(1,1)<<"\t"<< fel(1,2)<<"\t"<< fel(1,3)<<"\n"<< fel(2,1)<<"\t"<< fel(2,2)<<"\t"<< fel(2,3)<<"\n"<< fel(3,1)<<"\t"<< fel(3,2)<<"\t"<< fel(3,3)<<"\n";
         std::cout << "eel Elastic Green strain\n"<< eel(1,1)<<"\t"<< eel(1,2)<<"\t"<< eel(1,3)<<"\n"<< eel(2,1)<<"\t"<< eel(2,2)<<"\t"<< eel(2,3)<<"\n"<< eel(3,1)<<"\t"<< eel(3,2)<<"\t"<< eel(3,3)<<"\n";
-        std::cout << "time " << time(1) <<"\t" << time(2)<<"\n";
+        std::cout << "RSS Tau\n"<< tau(1)<<"\t"<< tau(2)<<"\t"<< tau(3)<<"\t"<< tau(4)<<"\t"<< tau(5)<<"\t"<< tau(6)<<"\t"<< tau(7)<<"\t"<< tau(8)<<"\t"<< tau(9)<<"\t"<< tau(10)<<"\t"<< tau(11)<<"\t"<< tau(12)<<"\t"
+        std::cout << "time " << time(1) <<"\t" << time(2)<<"\t" << dtime<<"\n";
     }
   //C
   //C:  END OF UMAT
