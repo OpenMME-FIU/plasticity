@@ -3352,6 +3352,7 @@ umat(
         std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
         std::cout << "dfgrd0\n"<< dfgrd0(1,1)<<"\t"<< dfgrd0(1,2)<<"\t"<< dfgrd0(1,3)<<"\n"<< dfgrd0(2,1)<<"\t"<< dfgrd0(2,2)<<"\t"<< dfgrd0(2,3)<<"\n"<< dfgrd0(3,1)<<"\t"<< dfgrd0(3,2)<<"\t"<< dfgrd0(3,3)<<"\n";
         std::cout << "dfgrd1\n"<< dfgrd1(1,1)<<"\t"<< dfgrd1(1,2)<<"\t"<< dfgrd1(1,3)<<"\n"<< dfgrd1(2,1)<<"\t"<< dfgrd1(2,2)<<"\t"<< dfgrd1(2,3)<<"\n"<< dfgrd1(3,1)<<"\t"<< dfgrd1(3,2)<<"\t"<< dfgrd1(3,3)<<"\n";
+        std::cout << "fpinv0 inverse plastic def grad\n"<< fpinv0(1,1)<<"\t"<< fpinv0(1,2)<<"\t"<< fpinv0(1,3)<<"\n"<< fpinv0(2,1)<<"\t"<< fpinv0(2,2)<<"\t"<< fpinv0(2,3)<<"\n"<< fpinv0(3,1)<<"\t"<< fpinv0(3,2)<<"\t"<< fpinv0(3,3)<<"\n";
         std::cout << "fel Elastic Def Grad\n"<< fel(1,1)<<"\t"<< fel(1,2)<<"\t"<< fel(1,3)<<"\n"<< fel(2,1)<<"\t"<< fel(2,2)<<"\t"<< fel(2,3)<<"\n"<< fel(3,1)<<"\t"<< fel(3,2)<<"\t"<< fel(3,3)<<"\n";
         std::cout << "eel Elastic Green strain\n"<< eel(1,1)<<"\t"<< eel(1,2)<<"\t"<< eel(1,3)<<"\n"<< eel(2,1)<<"\t"<< eel(2,2)<<"\t"<< eel(2,3)<<"\n"<< eel(3,1)<<"\t"<< eel(3,2)<<"\t"<< eel(3,3)<<"\n";
         std::cout << "time " << time(1) <<"\t" << time(2)<<"\n";

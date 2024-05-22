@@ -170,6 +170,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               dfgrd0(i+1,j+1)=F[i][j];
+              dfgrd1(i+1,j+1)=F[i][j]; // is this only for first timestep?
               sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
