@@ -237,7 +237,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
           }
       }
 
-
+    if (cellID+quadPtID == 0)
+    {
+        this->pcout << "T_tau a\t"<<T_tau[0][0]<<"\t"<<T_tau[0][1]<<"\t"<<T_tau[0][2]<<"\t"<<T_tau[1][0]<<"\t"<<T_tau[1][1]<<"\t"<<T_tau[1][2]<<"\t"<<T_tau[2][0]<<"\t"<<T_tau[2][1]<<"\t"<<T_tau[2][2]<<"\n";
+    }
     std::cout.precision(16);
 
 
