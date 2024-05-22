@@ -196,11 +196,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                  ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
                  noel,npt,0,0,kstep,0);
-      for(unsigned int i=0 ; i<dim ; i++){
-          for(unsigned int j=0 ; j<dim ; j++){
-              F_tau[i][j]=dfgrd1(i+1,j+1);
-          }
-      }
+//      for(unsigned int i=0 ; i<dim ; i++){
+//          for(unsigned int j=0 ; j<dim ; j++){
+//              F_tau[i][j]=dfgrd1(i+1,j+1);
+//          }
+//      } This isn't updated in the UMAT the way I expected...
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               //check voigt ordering of umat vs this script
