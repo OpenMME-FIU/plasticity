@@ -32,7 +32,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 
     /////////////////////////////////////////////////////////
     FullMatrix<double> FE_t(dim,dim),FP_t(dim,dim),F_t(dim,dim);  //Elastic, Plastic, and total deformation gradient
-    FullMatrix<double> E_t(dim,dim) // Green Strain for UMAT
+    FullMatrix<double> E_t(dim,dim); // Green Strain for UMAT
     Vector<double> s_alpha_t(n_Tslip_systems),slipfraction_t(n_slip_systems),twinfraction_t(n_twin_systems); // Slip resistance
     Vector<double> W_kh_t(n_Tslip_systems),W_kh_t1(n_Tslip_systems),W_kh_t2(n_Tslip_systems),signed_slip_t(n_Tslip_systems) ;
     Vector<double> rot1(dim);// Crystal orientation (Rodrigues representation)
@@ -50,47 +50,47 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     FullMatrix<double> SCHMID_TENSOR1(n_Tslip_systems*dim,dim),Normal_SCHMID_TENSOR1(n_Tslip_systems*dim,dim); // Projection matrices
     Vector<double> m1(dim),n1(dim);
 
-    // Elastic Modulus
-    FullMatrix<double> Dmat(2*dim,2*dim),Dmat2(2*dim,2*dim),TM(dim*dim,dim*dim);
-    Vector<double> vec2(dim*dim);
-    Vector<double> s_alpha_tau(n_Tslip_systems),slipfraction_tau(n_slip_systems),twinfraction_tau(n_twin_systems) ;
-    Vector<double> W_kh_tau(n_Tslip_systems),W_kh_tau1(n_Tslip_systems),W_kh_tau2(n_Tslip_systems); // Converged backstresses
-    Vector<double> W_kh_tau_it(n_Tslip_systems),W_kh_tau1_it(n_Tslip_systems),W_kh_tau2_it(n_Tslip_systems); // Iterative backstresses
-    Vector<double> h_beta(n_Tslip_systems),h0(n_Tslip_systems),a_pow(n_Tslip_systems),s_s(n_Tslip_systems); // Isotropic hardening parameters
-    FullMatrix<double> h_alpha_beta_t(n_Tslip_systems,n_Tslip_systems),Ep_tau(dim,dim),del_Ep_tau(dim,dim);
-    Vector<double> resolved_shear_tau(n_Tslip_systems), normal_stress_tau(n_Tslip_systems),signed_slip_tau(n_Tslip_systems);
-    double Ep_eff_cum_tau,del_Ep_eff_cum_tau;
-    FullMatrix<double> PK1_Stiff(dim*dim,dim*dim); // Tangent modulus
-    FullMatrix<double> T_star_tau(dim,dim),mtemp(dim,dim);
-    Vector<double> vtemp(2*dim);
+//    // Elastic Modulus
+//    FullMatrix<double> Dmat(2*dim,2*dim),Dmat2(2*dim,2*dim),TM(dim*dim,dim*dim);
+//    Vector<double> vec2(dim*dim);
+//    Vector<double> s_alpha_tau(n_Tslip_systems),slipfraction_tau(n_slip_systems),twinfraction_tau(n_twin_systems) ;
+//    Vector<double> W_kh_tau(n_Tslip_systems),W_kh_tau1(n_Tslip_systems),W_kh_tau2(n_Tslip_systems); // Converged backstresses
+//    Vector<double> W_kh_tau_it(n_Tslip_systems),W_kh_tau1_it(n_Tslip_systems),W_kh_tau2_it(n_Tslip_systems); // Iterative backstresses
+//    Vector<double> h_beta(n_Tslip_systems),h0(n_Tslip_systems),a_pow(n_Tslip_systems),s_s(n_Tslip_systems); // Isotropic hardening parameters
+//    FullMatrix<double> h_alpha_beta_t(n_Tslip_systems,n_Tslip_systems),Ep_tau(dim,dim),del_Ep_tau(dim,dim);
+//    Vector<double> resolved_shear_tau(n_Tslip_systems), normal_stress_tau(n_Tslip_systems),signed_slip_tau(n_Tslip_systems);
+//    double Ep_eff_cum_tau,del_Ep_eff_cum_tau;
+//    FullMatrix<double> PK1_Stiff(dim*dim,dim*dim); // Tangent modulus
+//    FullMatrix<double> T_star_tau(dim,dim),mtemp(dim,dim);
+//    Vector<double> vtemp(2*dim);
     double det_FE_tau, det_F_tau, trny_op, trny_in;
-    double m1_norm, n1_norm ;
-
-    unsigned int itr1, itr2;
-    double sctmp1, sctmp2, sctmp3, sctmp4; // Scalars used as temporary variables
-    Vector<double> G_iter(2*dim),locres_vec(2*dim+2*n_Tslip_systems),stateVar_it(2*dim+2*n_Tslip_systems),stateVar_temp(2*dim+2*n_Tslip_systems),stateVar_diff(2*dim+2*n_Tslip_systems),T_star_iter_vec(2*dim);
-    Vector<double> gradFold(2*dim+2*n_Tslip_systems) ;
-    FullMatrix<double> btemp1(2*dim,2*dim),J_iter(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems),J_iter_inv(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems),LP_acc(dim,dim),LP_acc2(dim,dim) ;
-    FullMatrix<double> J_iter_cp(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems);
-    FullMatrix<double> T_star_iter(dim,dim),T_star_iterp(dim,dim);
-    FullMatrix<double> CE_t(dim,dim);
-    Vector<double> s_alpha_it(n_Tslip_systems),s_alpha_iterp(n_Tslip_systems),delgam_tau(n_Tslip_systems),delgam_tau_iter(n_Tslip_systems);
-
-    Vector<double> vtmp1(2*dim),vtmp2(2*dim),vtmp3(2*dim);
-    Vector<double> vtmp4(n_Tslip_systems);
-    Vector<double> nv1(2*dim),nv2(2*dim);
-    double locres, locres2;
-    double sgnm, sgnm2 , sgnm3 , sgnm4, Fold ;
-
-    FullMatrix<double>  cnt1(dim*dim,dim*dim),cnt2(dim*dim,dim*dim),cnt3(dim*dim,dim*dim),cnt4(dim*dim,dim*dim); // Variables to track individual contributions
-    FullMatrix<double> dFedF(dim*dim,dim*dim),dFpdFe(dim*dim,dim*dim); // Meaningful variables
-    FullMatrix<double>  ntemp1(dim*dim,dim*dim),ntemp2(dim*dim,dim*dim),ntemp3(dim*dim,dim*dim),ntemp4(dim*dim,dim*dim),ntemp5(dim*dim,dim*dim),ntemp6(dim*dim,dim*dim); // Temporary variables
-    FullMatrix<double> Pmat(n_Tslip_systems,n_Tslip_systems),Qmat(n_Tslip_systems,n_Tslip_systems),Pmat_inv(n_Tslip_systems,n_Tslip_systems),Rmat(n_Tslip_systems,n_Tslip_systems) ;
-    FullMatrix<double> Smat(n_Tslip_systems,n_Tslip_systems) ;
-    FullMatrix<double> Qmat2(n_Tslip_systems,dim*dim),dgamdFe(n_Tslip_systems,dim*dim) ;
-    Vector<double> nvec1(dim*dim),nvec2(dim*dim) ;
-
-    double modifier1_num, modifier1_den, modifier2_num, modifier2_den, modifier;
+//    double m1_norm, n1_norm ;
+//
+//    unsigned int itr1, itr2;
+//    double sctmp1, sctmp2, sctmp3, sctmp4; // Scalars used as temporary variables
+//    Vector<double> G_iter(2*dim),locres_vec(2*dim+2*n_Tslip_systems),stateVar_it(2*dim+2*n_Tslip_systems),stateVar_temp(2*dim+2*n_Tslip_systems),stateVar_diff(2*dim+2*n_Tslip_systems),T_star_iter_vec(2*dim);
+//    Vector<double> gradFold(2*dim+2*n_Tslip_systems) ;
+//    FullMatrix<double> btemp1(2*dim,2*dim),J_iter(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems),J_iter_inv(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems),LP_acc(dim,dim),LP_acc2(dim,dim) ;
+//    FullMatrix<double> J_iter_cp(2*dim+2*n_Tslip_systems,2*dim+2*n_Tslip_systems);
+//    FullMatrix<double> T_star_iter(dim,dim),T_star_iterp(dim,dim);
+//    FullMatrix<double> CE_t(dim,dim);
+//    Vector<double> s_alpha_it(n_Tslip_systems),s_alpha_iterp(n_Tslip_systems),delgam_tau(n_Tslip_systems),delgam_tau_iter(n_Tslip_systems);
+//
+//    Vector<double> vtmp1(2*dim),vtmp2(2*dim),vtmp3(2*dim);
+//    Vector<double> vtmp4(n_Tslip_systems);
+//    Vector<double> nv1(2*dim),nv2(2*dim);
+//    double locres, locres2;
+//    double sgnm, sgnm2 , sgnm3 , sgnm4, Fold ;
+//
+//    FullMatrix<double>  cnt1(dim*dim,dim*dim),cnt2(dim*dim,dim*dim),cnt3(dim*dim,dim*dim),cnt4(dim*dim,dim*dim); // Variables to track individual contributions
+//    FullMatrix<double> dFedF(dim*dim,dim*dim),dFpdFe(dim*dim,dim*dim); // Meaningful variables
+//    FullMatrix<double>  ntemp1(dim*dim,dim*dim),ntemp2(dim*dim,dim*dim),ntemp3(dim*dim,dim*dim),ntemp4(dim*dim,dim*dim),ntemp5(dim*dim,dim*dim),ntemp6(dim*dim,dim*dim); // Temporary variables
+//    FullMatrix<double> Pmat(n_Tslip_systems,n_Tslip_systems),Qmat(n_Tslip_systems,n_Tslip_systems),Pmat_inv(n_Tslip_systems,n_Tslip_systems),Rmat(n_Tslip_systems,n_Tslip_systems) ;
+//    FullMatrix<double> Smat(n_Tslip_systems,n_Tslip_systems) ;
+//    FullMatrix<double> Qmat2(n_Tslip_systems,dim*dim),dgamdFe(n_Tslip_systems,dim*dim) ;
+//    Vector<double> nvec1(dim*dim),nvec2(dim*dim) ;
+//
+//    double modifier1_num, modifier1_den, modifier2_num, modifier2_den, modifier;
 
     double mulfac;
     FullMatrix<double> L(dim, dim);
@@ -103,87 +103,102 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     double Criteria_Delta_F,inverseNumberOfCuts,Criteria_Delta_F_2;
     unsigned int  numberOfCuts;
     FullMatrix<double> Delta_F,div_Delta_F;
-      pcout << "calculatePlasticity\n";
-      fem::arr_ref<fem::real_star_8, 1> stress; //Voight notation
-      fem::arr_ref<fem::real_star_8> statev; //
-      fem::arr_ref<fem::real_star_8, 2> ddsdde;
-      fem::real_star_8& sse;
-      fem::real_star_8 const& /* spd */;
-      fem::real_star_8 const& /* scd */;
-      fem::real_star_8 const& /* rpl */;
-      fem::arr_cref<fem::real_star_8> /* ddsddt */;
-      fem::arr_cref<fem::real_star_8> /* drplde */;
-      fem::real_star_8 const& /* drpldt */;
-      fem::arr_cref<fem::real_star_8> /* stran */;
-      fem::arr_cref<fem::real_star_8> /* dstran */;
-      fem::arr_cref<fem::real_star_8> time;
-      fem::real_star_8 const& dtime;
-      fem::real_star_8 const& /* temp */;
-      fem::real_star_8 const& /* dtemp */;
-      fem::arr_cref<fem::real_star_8> /* predef */;
-      fem::arr_cref<fem::real_star_8> /* dpred */;
-      fem::str_cref /* cmname */;
-      int ndi;
-      int nshr;
-      int ntens;
-      int nstatv;
-      fem::arr_cref<fem::real_star_8> props;
-      int nprops;
-      fem::arr_cref<fem::real_star_8> /* coords */;
-      fem::arr_cref<fem::real_star_8, 2> /* drot */;
-      fem::real_star_8 pnewdt;
-      fem::real_star_8 const& /* celent */;
-      fem::arr_cref<fem::real_star_8, 2> dfgrd0;
-      fem::arr_cref<fem::real_star_8, 2> dfgrd1;
-      int const& /* noel */;
-      int const& /* npt */;
-      fem::real_star_8 const& /* layer */;
-      int const& /* kspt */;
-      int const& kstep;
-      int const& /* kinc */;
-      pcout << "calculatePlasticity2\n";
-      ndi = dim;
-      nshr = (dim*dim - dim)/2;
-      ntens = ndi + nshr;
-      nstatv = this->userInputs.numberofUserMatStateVar1;
-      nprops = this->userInputs.numberofUserMatConstants1;
-      stress(fem::dimension(ntens));
-      statev(fem::dimension(nstatv));
-      ddsdde(fem::dimension(ntens, ntens));
-      time(fem::dimension(2));
-      props(fem::dimension(nprops));
-      dfgrd0(fem::dimension(dim, dim));
-      dfgrd1(fem::dimension(dim, dim));
-      for(unsigned int i=0; i<nstatv;i++){
-          statev[i] = stateVar_conv[cellID][quadPtID][i];
+
+
+    fem::real_star_8 sse;
+    fem::real_star_8 const spd = 0.0f; //
+    fem::real_star_8 const scd = 0.0f;//
+    fem::real_star_8 const rpl= 0.0f;//
+
+    fem::real_star_8 dtime= this->delT;
+    fem::real_star_8 const temp11= 0.0f;//
+    fem::real_star_8 const dtemp= 0.0f;//
+    fem::arr_1d<1, fem::real_star_8> predef;//
+    fem::arr_1d<1, fem::real_star_8> dpred;//
+    std::string cmname;//
+//      if (dim==2){
+//          int const& ndi=2;
+//          int const& nshr=1;
+//          int const& ntens=3;
+//      }
+//      else {
+//
+//      }
+    int const dim0=3;
+    int const dim2=6;
+
+//    this->pcout << "calculatePlasticity\n";
+    int const ndi=dim0; // SO DUMB
+    int const nshr=dim0;
+    int const ntens=dim2;
+    int const nstatv = 1000;//not allowed because fem:: is so dumb... this->userInputs.numberofUserMatStateVar1;
+    int const nprops = 1000; //not allowed because fem:: is so dumb... this->userInputs.numberofUserMatConstants1;
+    int nstatv_real = this->userInputs.numberofUserMatStateVar1;
+    int nprops_real = this->userInputs.numberofUserMatConstants1;
+    fem::arr_1d<dim, fem::real_star_8> coords ;//
+    fem::arr_2d<dim, dim, fem::real_star_8> drot ;//
+    fem::real_star_8 pnewdt;
+    fem::real_star_8 const celent = 0.0f;//
+    fem::arr_1d<ntens, fem::real_star_8> ddsddt;//
+    fem::arr_1d<ntens, fem::real_star_8> drplde;//
+    fem::real_star_8 const drpldt = 0.0f;//
+    fem::arr_1d<ntens, fem::real_star_8> stran ;//
+    fem::arr_1d<ntens, fem::real_star_8> dstran;//
+    fem::arr_1d<2, fem::real_star_8> time11;
+    int const noel = cellID;//
+    int const npt = quadPtID;//
+    fem::real_star_8 const layer = 0.0f;//
+    int const kspt = 0;//
+    int const kstep = 0;
+    int kinc = this->currentIncrement;//
+//    this->pcout << "calculatePlasticity2\n";
+    fem::arr_1d<nprops, fem::real_star_8> props;
+    fem::arr_1d<nstatv, fem::real_star_8> statev;
+    fem::arr_1d<ntens, fem::real_star_8> stress; //Voigt notation
+    fem::arr_2d<ntens, ntens, fem::real_star_8> ddsdde;
+    fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
+    fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
+    time11(1) = this->currentTime;
+    time11(2) = this->delT;
+//      time(fem::dimension(2));
+      for(int i=0; i<nstatv_real;i++){
+          statev(i+1) = stateVar_conv[cellID][quadPtID][i];
       }
-      for(unsigned int i=0; i<nprops;i++){
-          props[i] = UserMatConstants[i];
+      for(int i=0; i<nprops_real;i++){
+          props(i+1) = UserMatConstants[i];
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
-              dfgrd0[i][j]=F[i][j];
+              dfgrd0(i+1,j+1)=F[i][j];
               sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
+//    stress(4) = s(1, 2); FROM UMAT
+//    stress(5) = s(1, 3);
+//    stress(6) = s(2, 3);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
-                  stress[i] = T[i][j];
+                  stress(i+1) = T[i][j]; //add stran and E here?
               else
-                  stress[6-i-j] = T[i][j];
+                  stress(7-i-j) = T[i][j];
           }
       }
-      dfgrd1(fem::dimension(dim, dim));
+    if (cellID+quadPtID == 0)
+    {
+        this->pcout << "calculatePlasticity\n" << F[0][0] << " F " << dfgrd0(1,1) << " dfgrd0 " << T[0][0] << " T " << stress(1) << " stress\n";
+        this->pcout <<"F "<<F[0][0]<<"\t"<<F[0][1]<<"\t"<<F[0][2]<<"\n"<<F[1][0]<<"\t"<<F[1][1]<<"\t"<<F[1][2]<<"\n"<<F[2][0]<<"\t"<<F[2][1]<<"\t"<<F[2][2]<<"\n";
+    }
+//dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
-                 0,0,0,0,0,time,dtime,0,0,0,0,"",
-                 ndi,nshr,ntens,nstatv,props,nprops,
+                 0,0,0,0,0,time11,dtime,0,0,0,0,"",
+                 ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
-                 0,0,0,0,kstep,0);
+                 noel,npt,0,0,kstep,0);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
-              F_tau[i][j]=dfgrd1[i][j];
+              F_tau[i][j]=dfgrd1(i+1,j+1);
           }
       }
       for(unsigned int i=0 ; i<dim ; i++){
@@ -203,20 +218,20 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                       else
                           ib = 6 - k - l;
 
-                      dP_dF[i][j][k][l]=ddsdde[ia][ib];
+                      dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
                   }
               }
           }
       }
-      for (unsigned int i; i<nstatv;i++){
-          stateVar_iter[cellID][quadPtID][i]=statev[i]
+      for (int i; i<nstatv_real;i++){
+          stateVar_iter[cellID][quadPtID][i]=statev(i+1);
       }
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
-                  T_tau[i][j] = stress[i];
+                  T_tau[i][j] = stress(i+1);
               else
-                  T_tau[i][j] = stress[6-i-j];
+                  T_tau[i][j] = stress(7-i-j);
           }
       }
 
@@ -234,6 +249,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //      temp.mTmult(T_tau, FE_tau);
 
       det_F_tau = F_tau.determinant();
+    if (cellID+quadPtID == 0)
+    {
+        this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << dfgrd1(1,1) << " dfgrd1 " << T_tau[0][0] << " T " << stress(1) << " stress\n";
+    }
       temp.invert(F_tau);
       F_inv_tau.equ(1.0,temp);
       P_tau.mTmult(T_tau, temp); //CHECK ME!! for transpose
@@ -295,60 +314,60 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       F=F_tau; // Updating Deformation Gradient if it is Taylor model
     }
     /////// REORIENTATION Due to TWINNING ////////////////////
-
-    if (enableTwinning){
-      if (!this->userInputs.enableMultiphase){
-        if (F_r > 0) {
-          F_T = twinThresholdFraction + (twinSaturationFactor*F_e / F_r);
-        }
-        else {
-          F_T = twinThresholdFraction;
-        }
-      }
-      else{
-        F_T = twinThresholdFraction;
-      }
-
-      //////Eq. (13) in International Journal of Plasticity 65 (2015) 61–84
-      if (F_T > 1.0) {
-        F_T = 1.0;
-      }
-      local_twin.resize(n_twin_systems,0.0);
-      local_twin=twinfraction_iter[cellID][quadPtID];
-      result = std::max_element(local_twin.begin(), local_twin.end());
-      twin_pos= std::distance(local_twin.begin(), result);
-      twin_max=local_twin[twin_pos];
-      if (twin_conv[cellID][quadPtID] != 1.0) {
-        if(F_r>0){
-          if(twin_max > F_T){
-
-            rod(0) = rot_conv[cellID][quadPtID][0];rod(1) = rot_conv[cellID][quadPtID][1];rod(2) = rot_conv[cellID][quadPtID][2];
-            odfpoint(rotmat, rod);
-            rod2quat(quat2, rod);
-            quat1(0) = 0;
-            quat1(1) = n_alpha[n_slip_systems + twin_pos][0];
-            quat1(2) = n_alpha[n_slip_systems + twin_pos][1];
-            quat1(3) = n_alpha[n_slip_systems + twin_pos][2];
-
-            quatproduct(quatprod, quat2, quat1);
-
-
-            quat2rod(quatprod, rod);
-
-            odfpoint(rotmat, rod);
-
-            rot_iter[cellID][quadPtID][0] = rod(0);rot_iter[cellID][quadPtID][1] = rod(1);rot_iter[cellID][quadPtID][2] = rod(2);
-            rotnew_iter[cellID][quadPtID][0] = rod(0);rotnew_iter[cellID][quadPtID][1] = rod(1);rotnew_iter[cellID][quadPtID][2] = rod(2);
-            twin_iter[cellID][quadPtID] = 1.0;
-            for (unsigned int i = 0;i < n_twin_systems;i++) {
-              s_alpha_iter[cellID][quadPtID][n_slip_systems + i] =100000;
-            }
-            Fe_iter[cellID][quadPtID]=IdentityMatrix(dim);
-            Fp_iter[cellID][quadPtID]=IdentityMatrix(dim);
-          }
-        }
-      }
-    }
+//
+//    if (enableTwinning){
+//      if (!this->userInputs.enableMultiphase){
+//        if (F_r > 0) {
+//          F_T = twinThresholdFraction + (twinSaturationFactor*F_e / F_r);
+//        }
+//        else {
+//          F_T = twinThresholdFraction;
+//        }
+//      }
+//      else{
+//        F_T = twinThresholdFraction;
+//      }
+//
+//      //////Eq. (13) in International Journal of Plasticity 65 (2015) 61–84
+//      if (F_T > 1.0) {
+//        F_T = 1.0;
+//      }
+//      local_twin.resize(n_twin_systems,0.0);
+//      local_twin=twinfraction_iter[cellID][quadPtID];
+//      result = std::max_element(local_twin.begin(), local_twin.end());
+//      twin_pos= std::distance(local_twin.begin(), result);
+//      twin_max=local_twin[twin_pos];
+//      if (twin_conv[cellID][quadPtID] != 1.0) {
+//        if(F_r>0){
+//          if(twin_max > F_T){
+//
+//            rod(0) = rot_conv[cellID][quadPtID][0];rod(1) = rot_conv[cellID][quadPtID][1];rod(2) = rot_conv[cellID][quadPtID][2];
+//            odfpoint(rotmat, rod);
+//            rod2quat(quat2, rod);
+//            quat1(0) = 0;
+//            quat1(1) = n_alpha[n_slip_systems + twin_pos][0];
+//            quat1(2) = n_alpha[n_slip_systems + twin_pos][1];
+//            quat1(3) = n_alpha[n_slip_systems + twin_pos][2];
+//
+//            quatproduct(quatprod, quat2, quat1);
+//
+//
+//            quat2rod(quatprod, rod);
+//
+//            odfpoint(rotmat, rod);
+//
+//            rot_iter[cellID][quadPtID][0] = rod(0);rot_iter[cellID][quadPtID][1] = rod(1);rot_iter[cellID][quadPtID][2] = rod(2);
+//            rotnew_iter[cellID][quadPtID][0] = rod(0);rotnew_iter[cellID][quadPtID][1] = rod(1);rotnew_iter[cellID][quadPtID][2] = rod(2);
+//            twin_iter[cellID][quadPtID] = 1.0;
+//            for (unsigned int i = 0;i < n_twin_systems;i++) {
+//              s_alpha_iter[cellID][quadPtID][n_slip_systems + i] =100000;
+//            }
+//            Fe_iter[cellID][quadPtID]=IdentityMatrix(dim);
+//            Fp_iter[cellID][quadPtID]=IdentityMatrix(dim);
+//          }
+//        }
+//      }
+//    }
 
   }
   #include "../../../include/crystalPlasticity_template_instantiations.h"

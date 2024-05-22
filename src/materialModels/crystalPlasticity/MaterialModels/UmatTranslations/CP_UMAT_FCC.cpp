@@ -7,14 +7,17 @@ using namespace fem::major_types;
 
 using fem::common;
 
-arr_ref<fem::real_star_8, 2>
+//arr_2d<3, 3, fem::real_star_8>
+void
 matmult(
         arr_cref<fem::real_star_8, 2> a,
-        arr_cref<fem::real_star_8, 2> b)
+        arr_cref<fem::real_star_8, 2> b,
+        arr_ref<fem::real_star_8, 2> return_value)
 {
-    fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
+//    arr_2d<3, 3, fem::real_star_8> return_value;
     a(dimension(3, 3));
     b(dimension(3, 3));
+    return_value(dimension(3,3));
     int i = fem::int0;
     int j = fem::int0;
     int k = fem::int0;
@@ -26,7 +29,7 @@ matmult(
             }
         }
     }
-    return return_value;
+//    return return_value;
 }
 
 void
@@ -257,6 +260,7 @@ inverse3(
   arr_cref<fem::real_star_8, 2> a,
   arr_ref<fem::real_star_8, 2> b)
 {
+    arr_2d<3, 3, fem::real_star_8> bb;
   a(dimension(3, 3));
   b(dimension(3, 3));
   //C
@@ -272,20 +276,29 @@ inverse3(
   fem::real_star_8 det = a(1, 1) * b(1, 1) + a(1, 2) * b(2, 1) + a(1,
     3) * b(3, 1);
   //C
-  arr_2d<3, 3, fem::real_star_8> unit(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> unit;
+  arr_2d<3, 3, fem::real_star_8> copy;
   //unit = 0.0f;
   int i = fem::int0;
   int k = fem::int0;
-  FEM_DO_SAFE(i, 1, 3) {
-    unit(i, i) = 2.0f;
-  }
+
     FEM_DO_SAFE(i, 1, 3)
     {
         FEM_DO_SAFE(k, 1, 3) {
-            b(i, k) = b(i,k)/det;
+            copy(i, k) = b(i,k)/det;
         }
     }
-  b = matmult(b, (unit - matmult(a, b)));
+    matmult(a, copy, bb);
+
+    FEM_DO_SAFE(i, 1, 3) {
+        FEM_DO_SAFE(k, 1, 3)
+        {
+            unit(i, k) = -bb(i, k);
+            if (i == k)
+                unit(i, i) += 2.0f;
+        }
+    }
+  matmult(copy, unit, b);
   //C
 }
 
@@ -639,7 +652,7 @@ nrfunction(
   fem::real_star_8 const& /* d */,
   fem::real_star_8& sse,
   arr_cref<fem::real_star_8> cts,
-  int& l1)
+  fem::real_star_8& l1)
 {
   func(dimension(12));
   gdot(dimension(12));
@@ -854,7 +867,7 @@ structmon(
   //C
   fem::real_star_8 dgammatx = 0.0f;
   //C
-  dgammatx = fem::max(eslip(1), eslip(2), eslip(3), eslip(4), eslip(5),
+  dgammatx = fem::dmax1(eslip(1), eslip(2), eslip(3), eslip(4), eslip(5),
     eslip(6), eslip(7), eslip(8), eslip(9), eslip(10), eslip(11), eslip(
     12));
   //C
@@ -1552,7 +1565,7 @@ cellsizemon(
   cts(dimension(46));
   statev(dimension(400));
   //C
-  fem::real_star_8 taurmax = fem::max(fem::abs(tau(1)), fem::abs(tau(2)),
+  fem::real_star_8 taurmax = fem::dmax1(fem::abs(tau(1)), fem::abs(tau(2)),
     fem::abs(tau(3)), fem::abs(tau(4)), fem::abs(tau(5)), fem::abs(tau(6)),
     fem::abs(tau(7)), fem::abs(tau(8)), fem::abs(tau(9)), fem::abs(tau(10)),
     fem::abs(tau(11)), fem::abs(tau(12)));
@@ -1585,6 +1598,7 @@ cellsize(
   props(dimension(5));
   //C
   int i = fem::int0;
+  fem::real_star_8 z=fem::zero<fem::real_star_8>();
   arr_1d<12, fem::real_star_8> ptau(fem::fill0);
   FEM_DO_SAFE(i, 1, 12) {
     ptau(i) = statev(i + 280);
@@ -1599,12 +1613,12 @@ cellsize(
         if (fem::sign(1.e0, tau(i) * ptau(i)) >= 0.0f) {
           taurange(i) = fem::abs(tau(i));
           statev(280 + i) = tau(i);
-          taumax(i) = fem::max(0.0f, tau(i));
-          taumin(i) = fem::min(0.0f, tau(i));
+          taumax(i) = fem::max(z, tau(i));
+          taumin(i) = fem::min(z, tau(i));
         }
         else {
-          taumax(i) = fem::max(0.0f, tau(i));
-          taumin(i) = fem::min(0.0f, tau(i));
+          taumax(i) = fem::max(z, tau(i));
+          taumin(i) = fem::min(z, tau(i));
           taurange(i) = fem::abs(taumax(i)) + fem::abs(taumin(i));
           statev(280 + i) = tau(i);
         }
@@ -1620,8 +1634,8 @@ cellsize(
         else {
           taurange(i) = fem::abs(ptau(i));
           statev(280 + i) = ptau(i);
-          taumax(i) = fem::max(0.0f, ptau(i));
-          taumin(i) = fem::min(0.0f, ptau(i));
+          taumax(i) = fem::max(z, ptau(i));
+          taumin(i) = fem::min(z, ptau(i));
         }
       }
       statev(304 + i) = taumax(i);
@@ -1644,7 +1658,7 @@ cellsize(
     }
   }
   //C
-  fem::real_star_8 taurmax = fem::max(taurange(1), taurange(2),
+  fem::real_star_8 taurmax = fem::dmax1(taurange(1), taurange(2),
     taurange(3), taurange(4), taurange(5), taurange(6), taurange(7),
     taurange(8), taurange(9), taurange(10), taurange(11), taurange(
     12));
@@ -2004,8 +2018,8 @@ njacobian(
     FEM_DO_SAFE(i, 1, 12) {
       gdotgt += fem::pow(ddg(i), 2.0f);
     }
-    a2 = 0.0f;
-    a3 = 0.0f;
+//    a2 = 0.0f;
+//    a3 = 0.0f;
     FEM_DO_SAFE(i, 1, 12) {
       a1(i) = 0.0f;
       FEM_DO_SAFE(k, 1, 12) {
@@ -2960,7 +2974,7 @@ umat(
   const fem::real_star_8 mi_ea = 1;
   arr_1d<48, fem::real_star_8> cts(fem::fill0);
   const fem::real_star_8 h1 = 1;
-  arr_2d<3, 3, fem::real_star_8> rotate(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> rotate(fem::fill0); //need to connect this next
   const fem::real_star_8 h2 = 0;
   const fem::real_star_8 h3 = 0;
   const fem::real_star_8 c11 = 249000000000.0f;
@@ -3060,10 +3074,7 @@ umat(
   //C
   //CREAL*8 (A-H,O-Z)
   //C
-  if (noel+npt==0)
-  {
-      std::cout << "inside umat\n";
-  }
+
   cts(48) = mi_ea;
   //C
   if (h1 == 999) {
@@ -3335,6 +3346,14 @@ umat(
   //C: STORE STATE VARIABLES EPLEFF=EFFECTIVE PLASTIC SHEAR STRAIN,
   endstore(gdot, statev, fpinv, ro, b, tau, ts, slpdir0, slpnor0,
     dtincr, kstep, rotate);
+
+    if (npt+noel==0)
+    {
+        std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
+        std::cout << "dfgrd0\n"<< dfgrd0(1,1)<<"\t"<< dfgrd0(1,2)<<"\t"<< dfgrd0(1,3)<<"\n"<< dfgrd0(2,1)<<"\t"<< dfgrd0(2,2)<<"\t"<< dfgrd0(2,3)<<"\n"<< dfgrd0(3,1)<<"\t"<< dfgrd0(3,2)<<"\t"<< dfgrd0(3,3)<<"\n";
+        std::cout << "dfgrd1\n"<< dfgrd1(1,1)<<"\t"<< dfgrd1(1,2)<<"\t"<< dfgrd1(1,3)<<"\n"<< dfgrd1(2,1)<<"\t"<< dfgrd1(2,2)<<"\t"<< dfgrd1(2,3)<<"\n"<< dfgrd1(3,1)<<"\t"<< dfgrd1(3,2)<<"\t"<< dfgrd1(3,3)<<"\n";
+        std::cout << "time " << time(1) <<"\t" << time(2)<<"\n";
+    }
   //C
   //C:  END OF UMAT
   //C
@@ -3401,8 +3420,13 @@ pade_coefficient(
 {
   fem::real_star_8 return_value = fem::zero<fem::real_star_8>();
   arr_1d<7, fem::real_star_8> pt_table(fem::fill0);
-  pt_table = ( / 1.0e0, 1.0e0 / 2.0e0, 5.0e0 / 44.0e0, 1.0e0 / 66.0e0,
-    1.0e0 / 792.0e0, 1.0e0 / 15840.0e0, 1.0e0 / 665280.0e0 / );
+  pt_table(1) = 1.0e0;
+  pt_table(2) = 1.0e0 / 2.0e0;
+  pt_table(3) = 5.0e0 / 44.0e0;
+  pt_table(4) = 1.0e0 / 66.0e0;
+  pt_table(5) = 1.0e0 / 792.0e0;
+  pt_table(6) = 1.0e0 / 15840.0e0;
+  pt_table(7) = 1.0e0 / 665280.0e0;
   //C
   return_value = pt_table(j + 1);
   return return_value;
@@ -3426,9 +3450,19 @@ pade_factor(
   //C
   s = unit;
   fem::integer_star_4 j = fem::zero<fem::integer_star_4>();
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> prod;
   FEM_DOSTEP(j, 6, 1, -1) {
-    s = unit + (pade_coefficient(j) / pade_coefficient(j - 1)) * matmult(a, s);
+      matmult(a, s, prod);
+        int ii;
+        int jj;
+        FEM_DO_SAFE(ii, 1, 3)
+        {
+            FEM_DO_SAFE(jj, 1, 3)
+            {
+                s(ii,jj) = unit(ii,jj) + (pade_coefficient(j) / pade_coefficient(j - 1)) * prod(ii,jj);
+            }
+        }
+
   }
   //C
 }
@@ -3442,7 +3476,9 @@ approximate_exp(
   exp_a(dimension(3, 3));
   //C
   bool scale = false;
-  fem::real_star_8 maxavalue = fem::max(fem::abs(a));
+  fem::real_star_8 maxavalue = fem::dmax1(fem::dmax1(fem::abs(a(1,1)),fem::abs(a(1,2)),fem::abs(a(1,3))),
+                                          fem::dmax1(fem::abs(a(2,1)),fem::abs(a(2,2)),fem::abs(a(2,3))),
+                                          fem::dmax1(fem::abs(a(3,1)),fem::abs(a(3,2)),fem::abs(a(3,3))));
   int matrixpower = fem::int0;
   fem::real_star_8 modmaxavalue = fem::zero<fem::real_star_8>();
   arr_2d<3, 3, fem::real_star_8> a_mod(fem::fill0);
@@ -3450,24 +3486,62 @@ approximate_exp(
     scale = true;
     matrixpower = fem::nint(log2(2.0e0 * maxavalue) + 0.e5);
     modmaxavalue = fem::pow(2.0e0, matrixpower);
-    a_mod = a / modmaxavalue;
+    int ii;
+    int jj;
+    FEM_DO_SAFE(ii, 1, 3)
+      {
+      FEM_DO_SAFE(jj, 1, 3)
+      {
+      a_mod(ii, jj) = a(ii, jj) / modmaxavalue;
+      }
+      }
   }
   else {
-    a_mod = a;
+      int ii;
+      int jj;
+      FEM_DO_SAFE(ii, 1, 3)
+      {
+          FEM_DO_SAFE(jj, 1, 3)
+          {
+              a_mod(ii, jj) = a(ii, jj);
+          }
+      }
   }
   arr_2d<3, 3, fem::real_star_8> d(fem::fill0);
   pade_factor(-a_mod, d);
   arr_2d<3, 3, fem::real_star_8> n(fem::fill0);
   pade_factor(a_mod, n);
   arr_2d<3, 3, fem::real_star_8> d_inv(fem::fill0);
+  arr_2d<3, 3, fem::real_star_8> a_copy(fem::fill0);
+    arr_2d<3, 3, fem::real_star_8> a_copy2(fem::fill0);
   inverse3(d, d_inv);
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
-  exp_a = matmult(d_inv, n);
+//  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+  matmult(d_inv, n, a_copy);
+  int ii;
+  int jj;
+    FEM_DO_SAFE(ii, 1, 3)
+    {
+        FEM_DO_SAFE(jj, 1, 3)
+        {
+            a_copy2(ii, jj) = a_copy(ii, jj);
+        }
+    }
+
+//  a_copy2 = a_copy;
   //C
   int loopvar = fem::int0;
   if (scale) {
     FEM_DO_SAFE(loopvar, 1, matrixpower) {
-      exp_a = matmult(exp_a, exp_a);
+      matmult(a_copy, a_copy2, exp_a);
+      int ii;
+      int jj;
+      FEM_DO_SAFE(ii, 1, 3)
+      {
+          FEM_DO_SAFE(jj, 1, 3)
+          {
+              a_copy(ii, jj) = exp_a(ii, jj);
+          }
+      }
     }
   }
   //C
@@ -3502,7 +3576,7 @@ plasticgradientinv1(
   int n = fem::int0;
   arr_2d<3, 3, fem::real_star_8> a2(fem::fill0);
   arr_2d<3, 3, fem::real_star_8> a3(fem::fill0);
-  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
+//  arr_2d<3, 3, fem::real_star_8> matmult(fem::fill0);
   arr_2d<3, 3, fem::real_star_8> a4(fem::fill0);
   if (sum < 1.0e-5f) {
     //C
@@ -3523,7 +3597,7 @@ plasticgradientinv1(
     inverse3(fpinv0, a2);
     approximate_exp(vg * dtincr, a3);
     //C
-    a4 = matmult(a3, a2);
+    matmult(a3, a2, a4);
     inverse3(a4, fpinv);
   }
   //C

@@ -173,7 +173,9 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               sse += F[i][j]*P[i][j]/2; //missing divide by element volume???
           }
       }
-
+//    stress(4) = s(1, 2); FROM UMAT
+//    stress(5) = s(1, 3);
+//    stress(6) = s(2, 3);
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j)
