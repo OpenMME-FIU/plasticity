@@ -136,10 +136,18 @@ void crystalPlasticity<dim>::getElementalValues(FEValues<dim>& fe_values,
 				for (unsigned int i=0; i<dim; ++i){
 					F[i][i]+=1;
 				}
+                if (cellID+quadPtID == 0)
+                {
+                    this->pcout << "before plasticity\t" << P[0][0] <<"\n";
+                }
 
 				//Update strain, stress, and tangent for current time step/quadrature point
 				calculatePlasticity(cellID, q, 1);
 
+                if (cellID+quadPtID == 0)
+                {
+                    this->pcout << "after plasticity\t" << P[0][0] <<"\n";
+                }
 				//Fill local residual
 				for (unsigned int d=0; d<dofs_per_cell; ++d) {
 					unsigned int i = fe_values.get_fe().system_to_component_index(d).first;
