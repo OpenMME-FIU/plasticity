@@ -257,7 +257,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     //P_tau; //Check me too!
     if (cellID+quadPtID == 0)
     {
-        this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << T_tau[0][0] << " T " << stress(1) << " stress\n";
+        this->pcout << "after umat stress\n" << stress(1) << "\t" << stress(2) << "\t" << stress(3) << "\t" << stress(4) << "\t" << stress(5) << "\t" << stress(6) << "\n";
         this->pcout << "T_tau\t"<<T_tau[0][0]<<"\t"<<T_tau[0][1]<<"\t"<<T_tau[0][2]<<"\t"<<T_tau[1][0]<<"\t"<<T_tau[1][1]<<"\t"<<T_tau[1][2]<<"\t"<<T_tau[2][0]<<"\t"<<T_tau[2][1]<<"\t"<<T_tau[2][2]<<"\n";
         this->pcout << "P_tau\t"<<P_tau[0][0]<<"\t"<<P_tau[0][1]<<"\t"<<P_tau[0][2]<<"\t"<<P_tau[1][0]<<"\t"<<P_tau[1][1]<<"\t"<<P_tau[1][2]<<"\t"<<P_tau[2][0]<<"\t"<<P_tau[2][1]<<"\t"<<P_tau[2][2]<<"\n";
 //        this->pcout << "ddsdde\n" << ddsdde(1,1) << "\t"<< ddsdde(1,2) << "\t"<< ddsdde(1,3) << "\t"<< ddsdde(1,4) << "\t"<< ddsdde(1,5) << "\t"<< ddsdde(1,6) << "\n";
