@@ -182,13 +182,13 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       }
     if (cellID+quadPtID == 0)
     {
-        this->pcout << "calculatePlasticity\n" << F << "F" << dfgrd0 << "dfgrd0" << T << "T" << stress << "stress";
+        this->pcout << "calculatePlasticity\n" << F[0][0] << " F " << dfgrd0(1,1) << " dfgrd0 " << T[0][0] << " T " << stress(1) << " stress\n";
     }
 //dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
                  0,0,0,0,0,time,dtime,0,0,0,0,"",
-                 ndi,nshr,ntens,nstatv,props,nprops,
+                 ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
                  0,0,0,0,kstep,0);
       for(unsigned int i=0 ; i<dim ; i++){
@@ -244,6 +244,10 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //      temp.mTmult(T_tau, FE_tau);
 
       det_F_tau = F_tau.determinant();
+    if (cellID+quadPtID == 0)
+    {
+        this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << dfgrd1(1,1) << " dfgrd1 " << T_tau[0][0] << " T " << stress(1) << " stress\n";
+    }
       temp.invert(F_tau);
       F_inv_tau.equ(1.0,temp);
       P_tau.mTmult(T_tau, temp); //CHECK ME!! for transpose
