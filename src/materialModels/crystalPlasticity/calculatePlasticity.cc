@@ -110,7 +110,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::real_star_8 const scd = 0.0f;//
     fem::real_star_8 const rpl= 0.0f;//
 
-    fem::real_star_8 const dtime= 0.0f;
+    fem::real_star_8 dtime= this->delT;
     fem::real_star_8 const temp11= 0.0f;//
     fem::real_star_8 const dtemp= 0.0f;//
     fem::arr_1d<1, fem::real_star_8> predef;//
@@ -160,6 +160,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
     time11(1) = this->currentTime;
     time11(2) = this->delT;
+    dtime =
 //      time(fem::dimension(2));
       for(int i=0; i<nstatv_real;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
@@ -185,6 +186,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     if (cellID+quadPtID == 0)
     {
         this->pcout << "calculatePlasticity\n" << F[0][0] << " F " << dfgrd0(1,1) << " dfgrd0 " << T[0][0] << " T " << stress(1) << " stress\n";
+        this->pcout <<"F "<<F[0][0]<<"\t"<<F[0][1]<<"\t"<<F[0][2]<<"\n"<<F[1][0]<<"\t"<<F[1][1]<<"\t"<<F[1][2]<<"\n"<<F[2][0]<<"\t"<<F[2][1]<<"\t"<<F[2][2]<<"\n";
     }
 //dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
