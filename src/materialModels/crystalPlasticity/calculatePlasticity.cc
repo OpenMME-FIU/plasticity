@@ -144,7 +144,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::real_star_8 const drpldt = 0.0f;//
     fem::arr_1d<ntens, fem::real_star_8> stran ;//
     fem::arr_1d<ntens, fem::real_star_8> dstran;//
-    fem::arr_1d<2, fem::real_star_8> time;
+    fem::arr_1d<2, fem::real_star_8> time11;
     int const noel = cellID;//
     int const npt = quadPtID;//
     fem::real_star_8 const layer = 0.0f;//
@@ -158,6 +158,8 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     fem::arr_2d<ntens, ntens, fem::real_star_8> ddsdde;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd0;
     fem::arr_2d<dim,dim, fem::real_star_8> dfgrd1;
+    time11(1) = this->totalT;
+    time11(2) = this->delT;
 //      time(fem::dimension(2));
       for(int i=0; i<nstatv_real;i++){
           statev(i+1) = stateVar_conv[cellID][quadPtID][i];
@@ -187,7 +189,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
-                 0,0,0,0,0,time,dtime,0,0,0,0,"",
+                 0,0,0,0,0,time11,dtime,0,0,0,0,"",
                  ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
                  noel,npt,0,0,kstep,0);

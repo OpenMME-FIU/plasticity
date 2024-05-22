@@ -3074,10 +3074,7 @@ umat(
   //C
   //CREAL*8 (A-H,O-Z)
   //C
-  if (npt+noel==0)
-  {
-      std::cout << "inside umat\n";
-  }
+
   cts(48) = mi_ea;
   //C
   if (h1 == 999) {
@@ -3349,6 +3346,12 @@ umat(
   //C: STORE STATE VARIABLES EPLEFF=EFFECTIVE PLASTIC SHEAR STRAIN,
   endstore(gdot, statev, fpinv, ro, b, tau, ts, slpdir0, slpnor0,
     dtincr, kstep, rotate);
+
+    if (npt+noel==0)
+    {
+        std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
+        std::cout << "time " << time(0) <<"\t" << time(1)<<"\n";
+    }
   //C
   //C:  END OF UMAT
   //C
