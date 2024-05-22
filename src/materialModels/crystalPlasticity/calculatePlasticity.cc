@@ -197,11 +197,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
                  ndi,nshr,ntens,nstatv_real,props,nprops_real,
                  0,0,pnewdt,0, dfgrd0,dfgrd1,
                  noel,npt,0,0,kstep,0);
-//      for(unsigned int i=0 ; i<dim ; i++){
-//          for(unsigned int j=0 ; j<dim ; j++){
-//              F_tau[i][j]=dfgrd1(i+1,j+1);
-//          }
-//      } This isn't updated in the UMAT the way I expected...
+      for(unsigned int i=0 ; i<dim ; i++){
+          for(unsigned int j=0 ; j<dim ; j++){
+              F_tau[i][j]=dfgrd1(i+1,j+1);
+          }
+      } //This isn't updated in the UMAT the way I expected...
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               //check voigt ordering of umat vs this script
@@ -249,7 +249,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 //      temp.equ(1.0 / det_FE_tau, temp);
 //      temp.mTmult(T_tau, FE_tau);
 
-      det_F_tau = F_tau.determinant();
+      det_F_tau = F.determinant();
     if (cellID+quadPtID == 0)
     {
         this->pcout << "after umat\n" << det_F_tau << " det_F_tau " << T_tau[0][0] << " T " << stress(1) << " stress\n";
@@ -260,10 +260,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
         this->pcout << ddsdde(5,1) << "\t"<< ddsdde(5,2) << "\t"<< ddsdde(5,3) << "\t"<< ddsdde(5,4) << "\t"<< ddsdde(5,5) << "\t"<< ddsdde(5,6) << "\n";
         this->pcout << ddsdde(6,1) << "\t"<< ddsdde(6,2) << "\t"<< ddsdde(6,3) << "\t"<< ddsdde(6,4) << "\t"<< ddsdde(6,5) << "\t"<< ddsdde(6,6) << "\n";
     }
-      temp.invert(F_tau);
+      temp.invert(F);
       F_inv_tau.equ(1.0,temp);
       P_tau.mTmult(T_tau, temp); //CHECK ME!! for transpose
       P_tau.equ(det_F_tau, P_tau);
+      P_tau; //Check me too!
 
 //    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
