@@ -218,9 +218,9 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
           }
       }
     if (cellID+quadPtID == 0) {this->pcout << "statev #"<<nstatv_real<<"\t";}
-      for (int i; i<nstatv_real;i++){
+      for (int i=0; i<nstatv_real;i++){
           stateVar_iter[cellID][quadPtID][i]=statev(i+1);
-          if (cellID+quadPtID == 0) {this->pcout << statev(i+1) <<" "<<stateVar_iter[cellID][quadPtID][i]<<" ";}
+          if (cellID+quadPtID == 0) {this->pcout << statev(i+1) <<" ";}
       }
     if (cellID+quadPtID == 0) {this->pcout << "\n";}
       for(int i=0 ; i<dim ; i++){
