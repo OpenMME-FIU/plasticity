@@ -68,6 +68,10 @@ P(dim,dim)
     ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var22");
     ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var23");
     ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var24");
+    ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var25");
+    ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var26");
+    ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var27");
+    ellipticBVP<dim>::postprocessedFieldsAtCellCenters_solution_names.push_back("outputCellCenters_Var28");
     ellipticBVP<dim>::numPostProcessedFieldsAtCellCenters=29; //grainID
 
 }
