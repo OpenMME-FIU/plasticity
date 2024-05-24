@@ -47,14 +47,14 @@ set Write Mesh To EPS                            = false
 # Solver output parameters
 ####################################
 # Flag to write output vtu and pvtu files
-set Write Output                                 = false
+set Write Output                                 = true
 
 # Output Directory
 # Need to create directory before using this. Will be corrected in future versions of the software
 set Output Directory                             = results
 
 # Skip Output Steps
-set Skip Output Steps                            = 50
+set Skip Output Steps                            = 5
 
 # Output Equivalent strain
 set Output Equivalent strain                     = true
@@ -96,7 +96,7 @@ set Maximum linear solver iterations             = 50000
 set Relative linear solver tolerance             = 1.0e-10
 
 # Maximum no. of non-linear iterations
-set Maximum non linear iterations                = 4
+set Maximum non linear iterations                = 2
 
 ####################################
 # Elasticity parameters
