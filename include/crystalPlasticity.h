@@ -177,7 +177,7 @@ public:
                 * Green Strain (for UMAT connections)
                 */
 
-              FullMatrix<double> E;
+//              FullMatrix<double> E;
               /**
               * Global deformation gradient F
               */
