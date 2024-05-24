@@ -196,24 +196,28 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               F_tau[i][j]=dfgrd1(i+1,j+1);
           }
       } //This isn't updated in the UMAT the way I expected...
-      for(int i=0 ; i<dim ; i++){
-          for(int j=0 ; j<dim ; j++){
-              //check voigt ordering of umat vs this script
-              int ib=0;
-              int ia=0;
-              if (i == j) { ia = i; }
-              else { ia = 2 + i + j; }
-              for(int k=0 ; k<dim ; k++){
-                  for(int l=0 ; l<dim ; l++){
+      if (StiffnessCalFlag==1)
+      {
+          for(int i=0 ; i<dim ; i++){
+              for(int j=0 ; j<dim ; j++){
+                  //check voigt ordering of umat vs this script
+                  int ib=0;
+                  int ia=0;
+                  if (i == j) { ia = i; }
+                  else { ia = 2 + i + j; }
+                  for(int k=0 ; k<dim ; k++){
+                      for(int l=0 ; l<dim ; l++){
 
-                      if (k == l) { ib = k; }
-                      else { ib = 2 + k + l; }
+                          if (k == l) { ib = k; }
+                          else { ib = 2 + k + l; }
 
-                      dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
+                          dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
+                      }
                   }
               }
           }
       }
+
       for (int i; i<nstatv_real;i++){
           stateVar_iter[cellID][quadPtID][i]=statev(i+1);
       }

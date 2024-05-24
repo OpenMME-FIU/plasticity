@@ -109,25 +109,25 @@ void crystalPlasticity<dim>::updateAfterIncrement()
 				calculatePlasticity(cellID, q, 0);
 
         /////////I assigned Fe to F just for postprocessing output for Aaron
-        stateVar_iter[cellID][q][62]=deltaF[0][0];
-        stateVar_iter[cellID][q][63]=deltaF[0][1];
-        stateVar_iter[cellID][q][64]=deltaF[0][2];
-        stateVar_iter[cellID][q][65]=deltaF[1][0];
-        stateVar_iter[cellID][q][66]=deltaF[1][1];
-        stateVar_iter[cellID][q][67]=deltaF[1][2];
-        stateVar_iter[cellID][q][68]=deltaF[2][0];
-        stateVar_iter[cellID][q][69]=deltaF[2][1];
-        stateVar_iter[cellID][q][70]=deltaF[2][2];
-
-        stateVar_iter[cellID][q][71]=F[0][0];
-        stateVar_iter[cellID][q][72]=F[0][1];
-        stateVar_iter[cellID][q][73]=F[0][2];
-        stateVar_iter[cellID][q][74]=F[1][0];
-        stateVar_iter[cellID][q][75]=F[1][1];
-        stateVar_iter[cellID][q][76]=F[1][2];
-        stateVar_iter[cellID][q][77]=F[2][0];
-        stateVar_iter[cellID][q][78]=F[2][1];
-        stateVar_iter[cellID][q][79]=F[2][2];
+//        stateVar_iter[cellID][q][62]=deltaF[0][0];
+//        stateVar_iter[cellID][q][63]=deltaF[0][1];
+//        stateVar_iter[cellID][q][64]=deltaF[0][2];
+//        stateVar_iter[cellID][q][65]=deltaF[1][0];
+//        stateVar_iter[cellID][q][66]=deltaF[1][1];
+//        stateVar_iter[cellID][q][67]=deltaF[1][2];
+//        stateVar_iter[cellID][q][68]=deltaF[2][0];
+//        stateVar_iter[cellID][q][69]=deltaF[2][1];
+//        stateVar_iter[cellID][q][70]=deltaF[2][2];
+//
+//        stateVar_iter[cellID][q][71]=F[0][0];
+//        stateVar_iter[cellID][q][72]=F[0][1];
+//        stateVar_iter[cellID][q][73]=F[0][2];
+//        stateVar_iter[cellID][q][74]=F[1][0];
+//        stateVar_iter[cellID][q][75]=F[1][1];
+//        stateVar_iter[cellID][q][76]=F[1][2];
+//        stateVar_iter[cellID][q][77]=F[2][0];
+//        stateVar_iter[cellID][q][78]=F[2][1];
+//        stateVar_iter[cellID][q][79]=F[2][2];
         /////////I assigned Fe to F just for postprocessing output for Aaron
 
 				FullMatrix<double> temp,temp_lastIter,temp3,temp4, C_tau(dim, dim), E_tau(dim, dim), b_tau(dim, dim), C_tau_lastIter(dim, dim), E_tau_lastIter(dim, dim);
