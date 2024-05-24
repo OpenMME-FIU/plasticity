@@ -226,13 +226,13 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               if(i == j)
               {
                   T_tau[i][j] = stress(i + 1);
-                  if (cellID+quadPtID == 0) {this->pcout << "after umat loop \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
+//                  if (cellID+quadPtID == 0) {this->pcout << "after umat loop \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
 
               }
               else
               {
                   T_tau[i][j] = stress(7 - i - j);
-                  if (cellID+quadPtID == 0) {this->pcout << "after umat else \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
+//                  if (cellID+quadPtID == 0) {this->pcout << "after umat else \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
               }
           }
       }
@@ -262,10 +262,14 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
 
       det_F_tau = F_tau.determinant();
     temp.invert(F_tau);
+    std::cout.precision(16);
+    F_inv_tau.equ(1.0,temp); // WHY IS THIS ALL MESSING UP???
     if (cellID+quadPtID == 0)
     {
         this->pcout << "temp a\t"<<temp[0][0]<<"\t"<<temp[0][1]<<"\t"<<temp[0][2]<<"\t"<<temp[1][0]<<"\t"<<temp[1][1]<<"\t"<<temp[1][2]<<"\t"<<temp[2][0]<<"\t"<<temp[2][1]<<"\t"<<temp[2][2]<<"\n";
-        this->pcout << "F_tau a\t"<<F_tau[0][0]<<"\t"<<F_tau[0][1]<<"\t"<<F_tau[0][2]<<"\t"<<F_tau[1][0]<<"\t"<<F_tau[1][1]<<"\t"<<F_tau[1][2]<<"\t"<<F_tau[2][0]<<"\t"<<F_tau[2][1]<<"\t"<<F_tau[2][2]<<"\n";
+        this->pcout << "F_inv_tau a\t"<<F_inv_tau[0][0]<<"\t"<<F_inv_tau[0][1]<<"\t"<<F_inv_tau[0][2]<<"\t"<<F_inv_tau[1][0]<<"\t"<<F_inv_tau[1][1]<<"\t"<<F_inv_tau[1][2]<<"\t"<<F_inv_tau[2][0]<<"\t"<<F_inv_tau[2][1]<<"\t"<<F_inv_tau[2][2]<<"\n";
+        this->pcout << "P_tau\t"<<P_tau[0][0]<<"\t"<<P_tau[0][1]<<"\t"<<P_tau[0][2]<<"\t"<<P_tau[1][0]<<"\t"<<P_tau[1][1]<<"\t"<<P_tau[1][2]<<"\t"<<P_tau[2][0]<<"\t"<<P_tau[2][1]<<"\t"<<P_tau[2][2]<<"\n";
+        this->pcout << "det_F_tau\t"<<det_F_tau<<"\n";
     }
     std::cout.precision(16);
     F_inv_tau.equ(1.0,temp); // WHY IS THIS ALL MESSING UP???
