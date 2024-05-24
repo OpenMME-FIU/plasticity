@@ -183,11 +183,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               else { stress(7 - i - j) = T[i][j]; }
           }
       }
-    if (cellID+quadPtID == 0)
-    {
-        this->pcout << "calculatePlasticity\n" << F[0][0] << " F " << dfgrd0(1,1) << " dfgrd0 " << T[0][0] << " T " << stress(1) << " stress\n";
-        this->pcout <<"F "<<F[0][0]<<"\t"<<F[0][1]<<"\t"<<F[0][2]<<"\n"<<F[1][0]<<"\t"<<F[1][1]<<"\t"<<F[1][2]<<"\n"<<F[2][0]<<"\t"<<F[2][1]<<"\t"<<F[2][2]<<"\n";
-    }
+
 //dfgrd1(fem::dimension(dim, dim));
     //////////////////////////////////////////////////////////
     cp_fcc::umat(stress,statev,ddsdde,sse,0,0,0,
@@ -237,11 +233,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
           }
       }
 
-    if (cellID+quadPtID == 0)
-    {
-        this->pcout << "T_tau a\t"<<T_tau[0][0]<<"\t"<<T_tau[0][1]<<"\t"<<T_tau[0][2]<<"\t"<<T_tau[1][0]<<"\t"<<T_tau[1][1]<<"\t"<<T_tau[1][2]<<"\t"<<T_tau[2][0]<<"\t"<<T_tau[2][1]<<"\t"<<T_tau[2][2]<<"\n";
-        this->pcout << "F_tau a\t"<<F_tau[0][0]<<"\t"<<F_tau[0][1]<<"\t"<<F_tau[0][2]<<"\t"<<F_tau[1][0]<<"\t"<<F_tau[1][1]<<"\t"<<F_tau[1][2]<<"\t"<<F_tau[2][0]<<"\t"<<F_tau[2][1]<<"\t"<<F_tau[2][2]<<"\n";
-    }
+
     std::cout.precision(16);
 
 
@@ -264,17 +256,11 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     temp.invert(F_tau);
     std::cout.precision(16);
     F_inv_tau.equ(1.0,temp); // WHY IS THIS ALL MESSING UP???
-    if (cellID+quadPtID == 0)
-    {
-        this->pcout << "temp a\t"<<temp[0][0]<<"\t"<<temp[0][1]<<"\t"<<temp[0][2]<<"\t"<<temp[1][0]<<"\t"<<temp[1][1]<<"\t"<<temp[1][2]<<"\t"<<temp[2][0]<<"\t"<<temp[2][1]<<"\t"<<temp[2][2]<<"\n";
-        this->pcout << "F_inv_tau a\t"<<F_inv_tau[0][0]<<"\t"<<F_inv_tau[0][1]<<"\t"<<F_inv_tau[0][2]<<"\t"<<F_inv_tau[1][0]<<"\t"<<F_inv_tau[1][1]<<"\t"<<F_inv_tau[1][2]<<"\t"<<F_inv_tau[2][0]<<"\t"<<F_inv_tau[2][1]<<"\t"<<F_inv_tau[2][2]<<"\n";
-        this->pcout << "P_tau\t"<<P_tau[0][0]<<"\t"<<P_tau[0][1]<<"\t"<<P_tau[0][2]<<"\t"<<P_tau[1][0]<<"\t"<<P_tau[1][1]<<"\t"<<P_tau[1][2]<<"\t"<<P_tau[2][0]<<"\t"<<P_tau[2][1]<<"\t"<<P_tau[2][2]<<"\n";
-        this->pcout << "det_F_tau\t"<<det_F_tau<<"\n";
-    }
+
     std::cout.precision(16);
-    F_inv_tau.equ(1.0,temp); // WHY IS THIS ALL MESSING UP???
-    P_tau.mTmult(T_tau, F_tau); //CHECK ME!! for transpose
-    P_tau.equ(1/det_F_tau, P_tau);
+    F_inv_tau.equ(1.0,temp);
+    T_tau.mTmult(P_tau, temp); //A.mTm(C,B) :: C = A*B^T :: PK1 = Cauchy*F^-T
+    P_tau.equ(det_F_tau, P_tau);
     //P_tau; //Check me too!
     if (cellID+quadPtID == 0)
     {
