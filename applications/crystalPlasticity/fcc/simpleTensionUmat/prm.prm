@@ -38,7 +38,7 @@ set Subdivisions Y                               = 1
 set Subdivisions Z                               = 1
 
 # The number of initial refinements of the coarse mesh.
-set Refine factor                                = 2
+set Refine factor                                = 3
 
 # Only written for serial runs and if number of elements < 10000
 set Write Mesh To EPS                            = false
@@ -68,6 +68,21 @@ set Output Grain ID                              = true
 # Output Twin fractions
 set Output Twin fractions                        = false
 
+# Output Extra Variables
+set Output Variable 1 = true
+set Output Variable 2 = true
+set Output Variable 3 = true
+set Output Variable 4 = true
+set Output Variable 5 = true
+set Output Variable 6 = true
+
+set Output Variable 7 = true
+set Output Variable 8 = true
+set Output Variable 9 = true
+set Output Variable 10 = true
+set Output Variable 11 = true
+set Output Variable 12 = true
+
 ####################################
 # Boundary condition information
 ####################################
@@ -93,10 +108,10 @@ set Total time                                   = 5
 set Maximum linear solver iterations             = 50000
 
 # Relative linear solver tolerance
-set Relative linear solver tolerance             = 1.0e-10
+set Relative linear solver tolerance             = 1.0e-38
 
 # Maximum no. of non-linear iterations
-set Maximum non linear iterations                = 4
+set Maximum non linear iterations                = 3
 
 ####################################
 # Elasticity parameters

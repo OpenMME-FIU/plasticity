@@ -180,7 +180,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
       for(unsigned int i=0 ; i<dim ; i++){
           for(unsigned int j=0 ; j<dim ; j++){
               if(i == j) { stress(i + 1) = T[i][j]; }//add stran and E here?
-              else { stress(7 - i - j) = T[i][j]; }
+              else { stress(3 + i + j) = T[i][j]; }
           }
       }
 
@@ -202,12 +202,12 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               int ib=0;
               int ia=0;
               if (i == j) { ia = i; }
-              else { ia = 6 - i - j; }
+              else { ia = 2 + i + j; }
               for(int k=0 ; k<dim ; k++){
                   for(int l=0 ; l<dim ; l++){
 
                       if (k == l) { ib = k; }
-                      else { ib = 6 - k - l; }
+                      else { ib = 2 + k + l; }
 
                       dP_dF[i][j][k][l]=ddsdde(ia+1,ib+1);
                   }
@@ -227,7 +227,7 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
               }
               else
               {
-                  T_tau[i][j] = stress(7 - i - j);
+                  T_tau[i][j] = stress(3 + i + j);
 //                  if (cellID+quadPtID == 0) {this->pcout << "after umat else \n" << stress(i+1) <<"\t" <<T_tau[i][j]<<"\t" <<i <<"\t"<<j <<"\n";}
               }
           }
