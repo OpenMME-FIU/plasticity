@@ -173,8 +173,9 @@ void crystalPlasticity<dim>::getElementalValues(FEValues<dim>& fe_values,
 
 			elementalJacobian = K_local;
 			elementalResidual = Rlocal;
-            if (cellID == 0)
+            if (cellID < 2)
                 {
+                    this->pcout << "Cell ID "<<cellID<<"\n";
                     this->pcout << "elementalJacobian\n" << K_local[0][0] <<"\t"<< K_local[0][1] <<"\t"<< K_local[0][2] <<"\n"<< K_local[1][0] <<"\t"<< K_local[1][1] <<"\t"<< K_local[1][2] <<"\n"<< K_local[2][0] <<"\t"<< K_local[2][1] <<"\t"<< K_local[2][2] <<"\n";
                     this->pcout << "elementalResidual\n" << Rlocal[0] <<"\t"<< Rlocal[1] <<"\t"<< Rlocal[2] <<"\n";
                 }
