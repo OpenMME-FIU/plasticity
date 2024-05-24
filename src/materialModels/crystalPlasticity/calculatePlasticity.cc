@@ -262,18 +262,18 @@ void crystalPlasticity<dim>::calculatePlasticity(unsigned int cellID,
     T_tau.mTmult(P_tau, temp); //A.mTm(C,B) :: C = A*B^T :: PK1 = Cauchy*F^-T
     P_tau.equ(det_F_tau, P_tau);
     //P_tau; //Check me too!
-    if (cellID+quadPtID == 0)
-    {
-        this->pcout << "after umat stress\n" << stress(1) << "\t" << stress(2) << "\t" << stress(3) << "\t" << stress(4) << "\t" << stress(5) << "\t" << stress(6) << "\n";
-        this->pcout << "T_tau\t"<<T_tau[0][0]<<"\t"<<T_tau[0][1]<<"\t"<<T_tau[0][2]<<"\t"<<T_tau[1][0]<<"\t"<<T_tau[1][1]<<"\t"<<T_tau[1][2]<<"\t"<<T_tau[2][0]<<"\t"<<T_tau[2][1]<<"\t"<<T_tau[2][2]<<"\n";
-        this->pcout << "P_tau\t"<<P_tau[0][0]<<"\t"<<P_tau[0][1]<<"\t"<<P_tau[0][2]<<"\t"<<P_tau[1][0]<<"\t"<<P_tau[1][1]<<"\t"<<P_tau[1][2]<<"\t"<<P_tau[2][0]<<"\t"<<P_tau[2][1]<<"\t"<<P_tau[2][2]<<"\n";
+//    if (cellID+quadPtID == 0)
+//    {
+//        this->pcout << "after umat stress\n" << stress(1) << "\t" << stress(2) << "\t" << stress(3) << "\t" << stress(4) << "\t" << stress(5) << "\t" << stress(6) << "\n";
+//        this->pcout << "T_tau\t"<<T_tau[0][0]<<"\t"<<T_tau[0][1]<<"\t"<<T_tau[0][2]<<"\t"<<T_tau[1][0]<<"\t"<<T_tau[1][1]<<"\t"<<T_tau[1][2]<<"\t"<<T_tau[2][0]<<"\t"<<T_tau[2][1]<<"\t"<<T_tau[2][2]<<"\n";
+//        this->pcout << "P_tau\t"<<P_tau[0][0]<<"\t"<<P_tau[0][1]<<"\t"<<P_tau[0][2]<<"\t"<<P_tau[1][0]<<"\t"<<P_tau[1][1]<<"\t"<<P_tau[1][2]<<"\t"<<P_tau[2][0]<<"\t"<<P_tau[2][1]<<"\t"<<P_tau[2][2]<<"\n";
 //        this->pcout << "ddsdde\n" << ddsdde(1,1) << "\t"<< ddsdde(1,2) << "\t"<< ddsdde(1,3) << "\t"<< ddsdde(1,4) << "\t"<< ddsdde(1,5) << "\t"<< ddsdde(1,6) << "\n";
 //        this->pcout << ddsdde(2,1) << "\t"<< ddsdde(2,2) << "\t"<< ddsdde(2,3) << "\t"<< ddsdde(2,4) << "\t"<< ddsdde(2,5) << "\t"<< ddsdde(2,6) << "\n";
 //        this->pcout << ddsdde(3,1) << "\t"<< ddsdde(3,2) << "\t"<< ddsdde(3,3) << "\t"<< ddsdde(3,4) << "\t"<< ddsdde(3,5) << "\t"<< ddsdde(3,6) << "\n";
 //        this->pcout << ddsdde(4,1) << "\t"<< ddsdde(4,2) << "\t"<< ddsdde(4,3) << "\t"<< ddsdde(4,4) << "\t"<< ddsdde(4,5) << "\t"<< ddsdde(4,6) << "\n";
 //        this->pcout << ddsdde(5,1) << "\t"<< ddsdde(5,2) << "\t"<< ddsdde(5,3) << "\t"<< ddsdde(5,4) << "\t"<< ddsdde(5,5) << "\t"<< ddsdde(5,6) << "\n";
 //        this->pcout << ddsdde(6,1) << "\t"<< ddsdde(6,2) << "\t"<< ddsdde(6,3) << "\t"<< ddsdde(6,4) << "\t"<< ddsdde(6,5) << "\t"<< ddsdde(6,6) << "\n";
-    }
+//    }
 
 
 //    ////////////////////////////////////////////////////////////////////////////////////////////////////////////

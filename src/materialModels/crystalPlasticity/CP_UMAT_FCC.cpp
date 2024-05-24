@@ -3347,18 +3347,18 @@ umat(
   endstore(gdot, statev, fpinv, ro, b, tau, ts, slpdir0, slpnor0,
     dtincr, kstep, rotate);
 
-    if (npt+noel==0)
-    {
-        std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
-//        std::cout << "dfgrd0\n"<< dfgrd0(1,1)<<"\t"<< dfgrd0(1,2)<<"\t"<< dfgrd0(1,3)<<"\n"<< dfgrd0(2,1)<<"\t"<< dfgrd0(2,2)<<"\t"<< dfgrd0(2,3)<<"\n"<< dfgrd0(3,1)<<"\t"<< dfgrd0(3,2)<<"\t"<< dfgrd0(3,3)<<"\n";
-//        std::cout << "dfgrd1\n"<< dfgrd1(1,1)<<"\t"<< dfgrd1(1,2)<<"\t"<< dfgrd1(1,3)<<"\n"<< dfgrd1(2,1)<<"\t"<< dfgrd1(2,2)<<"\t"<< dfgrd1(2,3)<<"\n"<< dfgrd1(3,1)<<"\t"<< dfgrd1(3,2)<<"\t"<< dfgrd1(3,3)<<"\n";
-//        std::cout << "fpinv0 inverse plastic def grad\n"<< fpinv0(1,1)<<"\t"<< fpinv0(1,2)<<"\t"<< fpinv0(1,3)<<"\n"<< fpinv0(2,1)<<"\t"<< fpinv0(2,2)<<"\t"<< fpinv0(2,3)<<"\n"<< fpinv0(3,1)<<"\t"<< fpinv0(3,2)<<"\t"<< fpinv0(3,3)<<"\n";
-//        std::cout << "fel Elastic Def Grad\n"<< fel(1,1)<<"\t"<< fel(1,2)<<"\t"<< fel(1,3)<<"\n"<< fel(2,1)<<"\t"<< fel(2,2)<<"\t"<< fel(2,3)<<"\n"<< fel(3,1)<<"\t"<< fel(3,2)<<"\t"<< fel(3,3)<<"\n";
-//        std::cout << "eel Elastic Green strain\n"<< eel(1,1)<<"\t"<< eel(1,2)<<"\t"<< eel(1,3)<<"\n"<< eel(2,1)<<"\t"<< eel(2,2)<<"\t"<< eel(2,3)<<"\n"<< eel(3,1)<<"\t"<< eel(3,2)<<"\t"<< eel(3,3)<<"\n";
-//        std::cout << "RSS Tau\n"<< tau(1)<<"\t"<< tau(2)<<"\t"<< tau(3)<<"\t"<< tau(4)<<"\t"<< tau(5)<<"\t"<< tau(6)<<"\t"<< tau(7)<<"\t"<< tau(8)<<"\t"<< tau(9)<<"\t"<< tau(10)<<"\t"<< tau(11)<<"\t"<< tau(12)<<"\n";
-//        std::cout << "gamma dot\n"<< gdot(1)<<"\t"<< gdot(2)<<"\t"<< gdot(3)<<"\t"<< gdot(4)<<"\t"<< gdot(5)<<"\t"<< gdot(6)<<"\t"<< gdot(7)<<"\t"<< gdot(8)<<"\t"<< gdot(9)<<"\t"<< gdot(10)<<"\t"<< gdot(11)<<"\t"<< gdot(12)<<"\n";
-        std::cout << "time " << time(1) <<"\t" << time(2)<<"\t" << dtime<<"\tnincr "<<nincr<<"\t"<<nincrt<<"\n";
-    }
+//    if (npt+noel==0)
+//    {
+//        std::cout << "inside umat at end\nstress " << stress(1)<<"\t"<< stress(2)<<"\t"<< stress(3)<<"\t"<< stress(4)<<"\t"<< stress(5)<<"\t"<< stress(6)<<"\n";
+////        std::cout << "dfgrd0\n"<< dfgrd0(1,1)<<"\t"<< dfgrd0(1,2)<<"\t"<< dfgrd0(1,3)<<"\n"<< dfgrd0(2,1)<<"\t"<< dfgrd0(2,2)<<"\t"<< dfgrd0(2,3)<<"\n"<< dfgrd0(3,1)<<"\t"<< dfgrd0(3,2)<<"\t"<< dfgrd0(3,3)<<"\n";
+////        std::cout << "dfgrd1\n"<< dfgrd1(1,1)<<"\t"<< dfgrd1(1,2)<<"\t"<< dfgrd1(1,3)<<"\n"<< dfgrd1(2,1)<<"\t"<< dfgrd1(2,2)<<"\t"<< dfgrd1(2,3)<<"\n"<< dfgrd1(3,1)<<"\t"<< dfgrd1(3,2)<<"\t"<< dfgrd1(3,3)<<"\n";
+////        std::cout << "fpinv0 inverse plastic def grad\n"<< fpinv0(1,1)<<"\t"<< fpinv0(1,2)<<"\t"<< fpinv0(1,3)<<"\n"<< fpinv0(2,1)<<"\t"<< fpinv0(2,2)<<"\t"<< fpinv0(2,3)<<"\n"<< fpinv0(3,1)<<"\t"<< fpinv0(3,2)<<"\t"<< fpinv0(3,3)<<"\n";
+////        std::cout << "fel Elastic Def Grad\n"<< fel(1,1)<<"\t"<< fel(1,2)<<"\t"<< fel(1,3)<<"\n"<< fel(2,1)<<"\t"<< fel(2,2)<<"\t"<< fel(2,3)<<"\n"<< fel(3,1)<<"\t"<< fel(3,2)<<"\t"<< fel(3,3)<<"\n";
+////        std::cout << "eel Elastic Green strain\n"<< eel(1,1)<<"\t"<< eel(1,2)<<"\t"<< eel(1,3)<<"\n"<< eel(2,1)<<"\t"<< eel(2,2)<<"\t"<< eel(2,3)<<"\n"<< eel(3,1)<<"\t"<< eel(3,2)<<"\t"<< eel(3,3)<<"\n";
+////        std::cout << "RSS Tau\n"<< tau(1)<<"\t"<< tau(2)<<"\t"<< tau(3)<<"\t"<< tau(4)<<"\t"<< tau(5)<<"\t"<< tau(6)<<"\t"<< tau(7)<<"\t"<< tau(8)<<"\t"<< tau(9)<<"\t"<< tau(10)<<"\t"<< tau(11)<<"\t"<< tau(12)<<"\n";
+////        std::cout << "gamma dot\n"<< gdot(1)<<"\t"<< gdot(2)<<"\t"<< gdot(3)<<"\t"<< gdot(4)<<"\t"<< gdot(5)<<"\t"<< gdot(6)<<"\t"<< gdot(7)<<"\t"<< gdot(8)<<"\t"<< gdot(9)<<"\t"<< gdot(10)<<"\t"<< gdot(11)<<"\t"<< gdot(12)<<"\n";
+//        std::cout << "time " << time(1) <<"\t" << time(2)<<"\t" << dtime<<"\tnincr "<<nincr<<"\t"<<nincrt<<"\n";
+//    }
   //C
   //C:  END OF UMAT
   //C
